@@ -2,12 +2,13 @@
  * @author Peter Nitsch
  */
 
-TERM.AnsiViewer = function (fontmap){
+TERM.AnsiViewer = function (control){
 	
+	this.control = control;
 	this.cursor = new TERM.Cursor();
 	this.parser = new TERM.AnsiParser(this);
 	
-	var fontmap = fontmap;
+	var fontmap = this.control.fontmap;
 	var font = new jsTerm.Font();
 	var canvas = document.getElementById("canvas");
 	var width = canvas.width;
@@ -19,16 +20,15 @@ TERM.AnsiViewer = function (fontmap){
 	var _savedPosition = new jsTerm.Point();
 	
 	this.readBytes = function (bytes) {
+		this.cursorOff();
 		this.parser.parse(bytes);
+		if (this.cursor.visible)
+			this.cursorOn();
 	};
 	
 	this.clearCanvas = function(){
 		ctx.fillStyle = BLACK_NORMAL;
 		ctx.fillRect(0, 0, width, height);
-	};
-
-	this.testCanvas = function(){
-		ctx.drawImage(fontmap, 10, 10)
 	};
 
 	this.colorTable = function(val) {
@@ -60,6 +60,7 @@ TERM.AnsiViewer = function (fontmap){
 		if(!this.cursor.infiniteWidth && this.cursor.x + this.cursor.columnWidth > this.cursor.maxColumnWidth * this.cursor.columnWidth){
 			this.moveDown(1);
 			this.cursor.carriageReturn();
+			this.eraseEndOfLine()
 		}
 	};
 	
@@ -186,6 +187,18 @@ TERM.AnsiViewer = function (fontmap){
 		ctx.putImageData(canvasData, 0, this.cursor.lineHeight*(topMargin-1));
 	};
 	
+	this.setCursorVisible = function(state) {
+		this.cursor.visible = state
+	};
+
+	this.cursorOn = function() {
+		this.draw(219);
+	};
+
+	this.cursorOff = function() {
+		this.draw(255);
+	};
+
 	this.clearCanvas();
 
 };

@@ -47,6 +47,10 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.executeCommand = function(command) {
+		var cmd = ''
+		for (var i in command)
+			cmd = cmd + String.fromCharCode(command[i])
+		enyo.warn('Execute',cmd)
 		try {
 			this.actionCharacterLib[ command[command.length-1] ]( command );
 		} catch(error) {
@@ -63,27 +67,18 @@ TERM.EscapeSequencer = function (viewer){
 	
 	this.reset = function(params) {
 		// Reset all terminal settings to default.
+		viewer.clearCanvas();
 		viewer.formFeed();
-		viewer.reposition(0, 0);
 	};
 	
 	this.deviceRequest = function(params) {
 		if( params[2]==DIGIT_FIVE ){
-			TERM.socket.writeByte(ESCAPE);
-			TERM.socket.writeByte(LEFT_SQUARE_BRACKET);
-			TERM.socket.writeByte(DIGIT_ZERO);
-			TERM.socket.writeByte(LATIN_SMALL_LETTER_N);
+			viewer.control.writeString('\033[0n');
 		} else if( params[2]==DIGIT_SIX ) {
 			var i;
-	    	var rows = "" + viewer.cursor.y;
-	    	var cols = "" + viewer.cursor.x;
-
-			TERM.socket.writeByte(ESCAPE);
-			TERM.socket.writeByte(LEFT_SQUARE_BRACKET);
-			for(i=0;i<rows.length;i++)	TERM.socket.writeByte(rows.charCodeAt(i));
-			TERM.socket.writeByte(SEMICOLON);
-			for(i=0;i<cols.length;i++)	TERM.socket.writeByte(cols.charCodeAt(i));
-			TERM.socket.writeByte(LATIN_CAPITAL_LETTER_R);
+			var rows = "" + (viewer.cursor.y / viewer.cursor.lineHeight + 1);
+			var cols = "" + (viewer.cursor.x / viewer.cursor.columnWidth + 1);
+			viewer.control.writeString('\033['+rows+';'+cols+'R');
 		} else {
 			// 0 - Report Device OK
 			// 3 - Report Device Failure 
@@ -98,11 +93,11 @@ TERM.EscapeSequencer = function (viewer){
 		} else {
 			var lineArray = [];
 			var lineStr = "";
-			var line = 0;
+			var line = viewer.cursor.y;
 			
 			var columnArray = [];
 			var columnStr = "";
-			var column = 0;
+			var column = viewer.cursor.x;
 			
 			if(params.indexOf(SEMICOLON) != -1){
 				var semicolonIndex = params.indexOf(SEMICOLON);
@@ -127,11 +122,14 @@ TERM.EscapeSequencer = function (viewer){
 					lineStr += (lineArray[i] - 48).toString();
 				}
 				line = parseInt(lineStr);
-			} 
+			}
 			
+			column = (column>viewer.cursor.maxColumnWidth) ? viewer.cursor.maxColumnWidth : column;
+			line = (line>viewer.cursor.maxLineHeight) ? viewer.cursor.maxLineHeight : line;
+
 			column = (column>0) ? column-1 : 0;
 			line = (line>0) ? line-1 : 0;
-			
+
 			viewer.reposition(column, line);
 		}
 	};
@@ -355,7 +353,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.eraseDisplay = function(params) {
-		console.log(params)
 		if( params[2]==DIGIT_ONE ){
 			viewer.eraseUp();
 			viewer.reposition(0, 0);
@@ -368,12 +365,24 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	// Terminal functions
-	this.setMode = function(){
-		// TO DO
+	this.setMode = function(params){
+		if (params[2]==QUESTION_MARK) {
+			if (params[3]==DIGIT_TWO && params[4]==DIGIT_FIVE) {
+				viewer.setCursorVisible(true)
+				return
+			}
+		}
+		enyo.log('setMode', params)
 	};
 	
-	this.resetMode = function(){
-		// TO DO
+	this.resetMode = function(params){
+		if (params[2]==QUESTION_MARK) {
+			if (params[3]==DIGIT_TWO && params[4]==DIGIT_FIVE) {
+				viewer.setCursorVisible(false)
+				return
+			}
+		}
+		enyo.log('resetMode', params)
 	};
 	
 	this.setKeyboardStrings = function(){

@@ -31,7 +31,7 @@ enyo.kind({
 	},
 	
 	fmReady: function() {
-		this.viewer = new TERM.AnsiViewer(this.fontmap);
+		this.viewer = new TERM.AnsiViewer(this);
 		/*this.viewer.displayCleared();
     	this.viewer.reposition(0, 0);
     	this.viewer.formFeed();*/
@@ -66,10 +66,14 @@ enyo.kind({
 				break;
 			
 			default:
-				this.$.ttyrun.call({id: this.tty_id, data: String.fromCharCode(inEvent.charCode)})
+				this.writeString(String.fromCharCode(inEvent.charCode))
 				break;
 				
 		}
+	},
+
+	writeString: function(str) {
+		this.$.ttyrun.call({id: this.tty_id, data: str})
 	}
 
 })
