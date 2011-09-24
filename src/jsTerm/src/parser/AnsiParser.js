@@ -7,11 +7,8 @@ TERM.AnsiParser = function (viewer){
 	var viewer = viewer;
 	var escapeCommand = [];
 	var bufferEscapeCommand = false;
-	var controlCommand = [];
-	var bufferControlCommand = false;
 	
 	this.escapeCommands = new TERM.EscapeSequencer(viewer);
-	this.controlCommands = new TERM.ControlSequencer(viewer);
 	this._bytes;
 	
 	this.parse = function (bytes) {
@@ -52,22 +49,12 @@ TERM.AnsiParser = function (viewer){
 			escapeCommand = [];
 			escapeCommand.push(b);
 			bufferEscapeCommand = true;
-		} else if (b == CIRCUMFLEX_ACCENT) {
-			controlCommand = [];
-			controlCommand.push(b);
-			bufferControlCommand = true;
 		} else {
 			if(bufferEscapeCommand){
 				escapeCommand.push(b);
 				if( this.escapeCommands.checkCommandAction(escapeCommand.length, b) ) {
 					this.escapeCommands.executeCommand(escapeCommand);
 					bufferEscapeCommand = false;
-				}
-			} else if (bufferControlCommand) {
-				controlCommand.push(b);
-				if( this.controlCommands.checkCommandAction(controlCommand.length, b) ) {
-					this.controlCommands.executeCommand(controlCommand);
-					bufferControlCommand = false;
 				}
 			} else if( this.hasException(b) ) {
 				this._exceptionsLib[b]( b, this._bytes );
