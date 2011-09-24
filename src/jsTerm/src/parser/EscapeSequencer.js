@@ -66,11 +66,9 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.reset = function(params) {
-		console.log(params)
+		viewer.clearCanvas();
 		viewer.reposition(0, 0);
-    	viewer.formFeed();
-    	viewer.displayCleared();
-		viewer.eraseScreen();
+		viewer.formFeed();
 	};
 	
 	this.deviceRequest = function(params) {
