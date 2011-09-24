@@ -47,10 +47,10 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.executeCommand = function(command) {
-		var cmd = ''
+		/*var cmd = ''
 		for (var i in command)
 			cmd = cmd + String.fromCharCode(command[i])
-		enyo.warn('Execute',cmd)
+		enyo.warn('Execute',cmd)*/
 		try {
 			this.actionCharacterLib[ command[command.length-1] ]( command );
 		} catch(error) {

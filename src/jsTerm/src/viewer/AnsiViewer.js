@@ -142,7 +142,7 @@ TERM.AnsiViewer = function (control){
 
 	this.eraseDown = function() {
 		ctx.fillStyle = BLACK_NORMAL;
-		ctx.fillRect(0, this.cursor.y, this.cursor.maxColumnWidth * this.cursor.columnWidth, (this.cursor.maxLineheight * this.cursor.lineHeight) - this.cursor.y);
+		ctx.fillRect(0, this.cursor.y, this.cursor.maxColumnWidth * this.cursor.columnWidth, (this.cursor.maxLineHeight * this.cursor.lineHeight) - this.cursor.y);
 	};
 
 	this.eraseEndOfLine = function() {
