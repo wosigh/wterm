@@ -21,27 +21,10 @@ enyo.kind({
         { name: 'ttykill', kind: 'PalmService',
 	      service: 'palm://us.ryanhope.wterm.tty/', method: 'kill',
 	      onResponse: 'ttyKillResponse' },
-  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'term', content: '<div id="terminal"><canvas id="canvas" width="640" height="480"></canvas> </div>'}
+  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'term', content: '<div id="terminal"><canvas id="canvas" width="640" height="400"></canvas> </div>'}
   	],
 	
 	rendered: function() {
-		/*this.tty = new Terminal({
-			x: 0,
-			y: 0,
-			cols: 100,
-			rows: 32,
-			mapANSI: true,
-			termDiv: this.$.tty.getId(),
-			ps: '',
-			crsrBlinkMode: true,
-			handler: enyo.bind(this, 'termHandler'),
-			initHandler: enyo.bind(this, 'initHandler'),
-			exitHandler: termExitHandler
-		})
-		this.tty.open()
-		this.tty.focus()*/
-		//this.tty = new VT100(100, 24, "term")
-		//this.$.ttyopen.call()
 		this.fontmap = new Image();
 		this.fontmap.onload = enyo.bind(this, 'fmReady')
 		this.fontmap.src = "src/jsTerm/fonts/ansilove_font_pc_80x25.png";
@@ -49,32 +32,18 @@ enyo.kind({
 	
 	fmReady: function() {
 		this.viewer = new TERM.AnsiViewer(this.fontmap);
-		this.viewer.displayCleared();
+		/*this.viewer.displayCleared();
     	this.viewer.reposition(0, 0);
-    	this.viewer.formFeed();
+    	this.viewer.formFeed();*/
     	this.$.ttyopen.call()
 	},
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
-				var lines = inResponse.data.split('\r\n\n')
-				if (lines.length == 1) {
-					this.prompt = lines[0]
-					this.viewer.readBytes(this.prompt)
-				} else {
-					for (var i in lines) {
-						this.viewer.carriageReturn()
-						this.viewer.moveDown(1)
-						this.viewer.eraseLine()
-						this.viewer.readBytes(lines[i])
-					}
-				}				
+				this.viewer.readBytes(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
-				//this.$.ttyrun.call({id: this.tty_id, data: 'stty cols 100\rstty rows 30\rtop\r'})
-				//this.$.ttyrun.call({id: this.tty_id, data: 'stty rows 38 cols 140\rtop\r'})
-				//this.$.ttyrun.call({id: this.tty_id, data: '/colors.sh\r'})
 			}
 	    } else {
 			this.error(inResponse.errorCode, inResponse.errorText)
@@ -90,19 +59,12 @@ enyo.kind({
 	},
 	
 	keyPress: function(inSender, inEvent) {
-		var c = String.fromCharCode(inEvent.charCode)
-		this.cmdbuffer = this.cmdbuffer + c
-		if (inEvent.charCode == 8 && this.cmdbuffer) {
-			this.viewer.readBytes(c)
-			this.cmdbuffer = this.cmdbuffer[this.cmdbuffer.length-1]
-		} else if (inEvent.charCode == 13) {
-			/*this.viewer.moveDown(1)
-			this.viewer.carriageReturn()*/
-			this.viewer.cursor.moveBackward(this.cmdbuffer.length-1)
-			this.$.ttyrun.call({id: this.tty_id, data: this.cmdbuffer})
-			this.cmdbuffer = ''
-		} else {
-			this.viewer.readBytes(c)
+		switch (inEvent.charCode) {
+			
+			default:
+				this.$.ttyrun.call({id: this.tty_id, data: String.fromCharCode(inEvent.charCode)})
+				break;
+				
 		}
 	}
 

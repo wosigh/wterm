@@ -61,14 +61,10 @@ TERM.EscapeSequencer = function (viewer){
 		return false;
 	};
 	
-	this.unused = function(params) {
-		// EMPTY
-	};
-	
 	this.reset = function(params) {
-		viewer.clearCanvas();
-		viewer.reposition(0, 0);
+		// Reset all terminal settings to default.
 		viewer.formFeed();
+		viewer.reposition(0, 0);
 	};
 	
 	this.deviceRequest = function(params) {
@@ -359,6 +355,7 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.eraseDisplay = function(params) {
+		console.log(params)
 		if( params[2]==DIGIT_ONE ){
 			viewer.eraseUp();
 			viewer.reposition(0, 0);

@@ -70,6 +70,7 @@ TERM.AnsiParser = function (viewer){
 					case LINE_FEED:
 						viewer.carriageReturn();
 						viewer.moveDown(1);
+						viewer.eraseEndOfLine();
 					break;
 
 					case CARRIAGE_RETURN:

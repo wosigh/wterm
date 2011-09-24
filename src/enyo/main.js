@@ -2,6 +2,7 @@ enyo.kind({
 	
   	name: "wTerm.Main",
   	kind: enyo.VFlexBox,
+  	align: 'center',
   	
   	components: [
 		{kind: "AppMenu", components: [
