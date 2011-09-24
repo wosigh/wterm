@@ -7,7 +7,7 @@ enyo.kind({
 	tty_id: null,
 	viewer: null,
 	fontmap: null,
-	calls: 0,
+	prompt: true,
 	cmdbuffer: '',
   	
   	components: [
@@ -58,13 +58,18 @@ enyo.kind({
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
-				var lines = inResponse.data.split('\n')
-				this.error(lines.length)
-				if (lines.length == 1)
-					lines = inResponse.data.split('\r')
-				this.error(lines.length)
-				if (lines.length == 1)
-					this.viewer.readBytes(lines)
+				var lines = inResponse.data.split('\r\n\n')
+				if (lines.length == 1) {
+					this.prompt = lines[0]
+					this.viewer.readBytes(this.prompt)
+				} else {
+					for (var i in lines) {
+						this.viewer.carriageReturn()
+						this.viewer.moveDown(1)
+						this.viewer.eraseLine()
+						this.viewer.readBytes(lines[i])
+					}
+				}				
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 				//this.$.ttyrun.call({id: this.tty_id, data: 'stty cols 100\rstty rows 30\rtop\r'})
@@ -81,7 +86,7 @@ enyo.kind({
 	},
 	
 	killService: function() {
-		this.$.ttyrun.call({id: this.tty_id, data: 'exit\n'})
+		this.$.ttykill.call({id: this.tty_id})
 	},
 	
 	keyPress: function(inSender, inEvent) {
@@ -89,6 +94,7 @@ enyo.kind({
 		this.cmdbuffer = this.cmdbuffer + c
 		if (inEvent.charCode == 8 && this.cmdbuffer) {
 			this.viewer.readBytes(c)
+			this.cmdbuffer = this.cmdbuffer[this.cmdbuffer.length-1]
 		} else if (inEvent.charCode == 13) {
 			/*this.viewer.moveDown(1)
 			this.viewer.carriageReturn()*/
