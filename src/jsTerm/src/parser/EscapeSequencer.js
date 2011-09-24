@@ -67,7 +67,6 @@ TERM.EscapeSequencer = function (viewer){
 	
 	this.reset = function(params) {
 		// Reset all terminal settings to default.
-		viewer.clearCanvas();
 		viewer.formFeed();
 	};
 	
