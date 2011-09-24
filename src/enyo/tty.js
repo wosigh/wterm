@@ -61,6 +61,10 @@ enyo.kind({
 	keyPress: function(inSender, inEvent) {
 		switch (inEvent.charCode) {
 			
+			case BACKSPACE: // BACKSPACE sends ASCII DEL
+				this.$.ttyrun.call({id: this.tty_id, data: '\177'})
+				break;
+			
 			default:
 				this.$.ttyrun.call({id: this.tty_id, data: String.fromCharCode(inEvent.charCode)})
 				break;
