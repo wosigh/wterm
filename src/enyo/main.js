@@ -4,13 +4,20 @@ enyo.kind({
   	kind: enyo.VFlexBox,
   	
   	components: [
+		{kind: "AppMenu", components: [
+			{caption: "Show Keyboard", onclick: "showKeyboard"}
+		]},
 		{kind: 'wTerm.tty', name: 'tty', flex: 1}
   	],
   	
   	rendered: function() {
   		this.inherited(arguments)
   		enyo.keyboard.setManualMode(true)
-  		enyo.keyboard.show(0)
-  	}
+		this.showKeyboard()
+	},
+
+	showKeyboard: function() {
+		enyo.keyboard.show(0)
+	}
 	
 })
