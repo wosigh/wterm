@@ -36,7 +36,6 @@ enyo.kind({
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
-				this.warn(inResponse.data)
 				this.viewer.readBytes(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
