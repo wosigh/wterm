@@ -2,11 +2,8 @@ enyo.depends(
 
 	"src/css/main.css",
 
-	//"src/termlib.js",
-	//"src/VT100.js",
 	"src/jsTerm/src/Term.js",
 	"src/jsTerm/src/parser/CharacterCodes.js",
-	"src/jsTerm/src/parser/ControlSequencer.js",
 	"src/jsTerm/src/parser/EscapeSequencer.js",
 	"src/jsTerm/src/parser/AnsiParser.js",
 	"src/jsTerm/src/parser/NVTCodes.js",

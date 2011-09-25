@@ -2,7 +2,7 @@
   "id": "us.ryanhope.wterm",
   "package_format_version": 2,
   "loc_name": "wTerm",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "icon": "images/icon-64.png",
   "app": "us.ryanhope.wterm",
   "services": ["us.ryanhope.wterm.tty"]

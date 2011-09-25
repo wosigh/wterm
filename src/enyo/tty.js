@@ -7,8 +7,6 @@ enyo.kind({
 	tty_id: null,
 	viewer: null,
 	fontmap: null,
-	prompt: true,
-	cmdbuffer: '',
   	
   	components: [
   		{kind: "ApplicationEvents", onUnload: "killService", onKeypress: 'keyPress'},
@@ -32,15 +30,13 @@ enyo.kind({
 	
 	fmReady: function() {
 		this.viewer = new TERM.AnsiViewer(this);
-		/*this.viewer.displayCleared();
-    	this.viewer.reposition(0, 0);
-    	this.viewer.formFeed();*/
     	this.$.ttyopen.call()
 	},
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
+				this.warn(inResponse.data)
 				this.viewer.readBytes(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
@@ -59,17 +55,7 @@ enyo.kind({
 	},
 	
 	keyPress: function(inSender, inEvent) {
-		switch (inEvent.charCode) {
-			
-			case BACKSPACE: // BACKSPACE sends ASCII DEL
-				this.$.ttyrun.call({id: this.tty_id, data: '\177'})
-				break;
-			
-			default:
-				this.writeString(String.fromCharCode(inEvent.charCode))
-				break;
-				
-		}
+		this.writeString(String.fromCharCode(inEvent.charCode))
 	},
 
 	writeString: function(str) {

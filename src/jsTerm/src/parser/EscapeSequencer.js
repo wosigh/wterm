@@ -196,6 +196,7 @@ TERM.EscapeSequencer = function (viewer){
 	var _currentBackgroundColor = BLACK_NORMAL;
 	
 	this.setGraphicsMode = function(params) {
+		//enyo.warn(params)
 		for( i=2; i<params.length; i++ ){
 			switch( params[i] ){
 
@@ -354,7 +355,7 @@ TERM.EscapeSequencer = function (viewer){
 	this.eraseDisplay = function(params) {
 		if( params[2]==DIGIT_ONE ){
 			viewer.eraseUp();
-			viewer.reposition(0, 0);
+			//viewer.reposition(0, 0);
 		} else if( params[2]==DIGIT_TWO ) {
 			viewer.eraseScreen();
 			viewer.reposition(0, 0);
@@ -370,6 +371,9 @@ TERM.EscapeSequencer = function (viewer){
 				viewer.setCursorVisible(true)
 				return
 			}
+		} else if (params[2]==DIGIT_SEVEN) {
+			viewer.wrap = true
+			return
 		}
 		enyo.log('setMode', params)
 	};
@@ -380,6 +384,10 @@ TERM.EscapeSequencer = function (viewer){
 				viewer.setCursorVisible(false)
 				return
 			}
+		} else if (params[2]==DIGIT_SEVEN) {
+			enyo.warn('Disable Wrap')
+			viewer.wrap = false
+			return
 		}
 		enyo.log('resetMode', params)
 	};

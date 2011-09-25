@@ -63,7 +63,7 @@ TERM.AnsiParser = function (viewer){
 			} else {
 				switch(b) {
 					case BACKSPACE:
-						viewer.moveBackward(1, true);
+						viewer.moveBackward(1);
 					break;
 
 					case LINE_FEED:

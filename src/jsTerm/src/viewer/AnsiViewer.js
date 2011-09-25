@@ -18,12 +18,11 @@ TERM.AnsiViewer = function (control){
 	var ctx = canvas.getContext("2d");
 	var scroll = true;
 	var _savedPosition = new jsTerm.Point();
+	var wrap = true;
+	var erase = false;
 	
 	this.readBytes = function (bytes) {
-		this.cursorOff();
 		this.parser.parse(bytes);
-		if (this.cursor.visible)
-			this.cursorOn();
 	};
 	
 	this.clearCanvas = function(){
@@ -54,14 +53,15 @@ TERM.AnsiViewer = function (control){
 	};
 
 	this.drawCharacter = function(character) {
-		this.draw(character);
-		this.cursor.moveForward(1);
 
-		if(!this.cursor.infiniteWidth && this.cursor.x + this.cursor.columnWidth > this.cursor.maxColumnWidth * this.cursor.columnWidth){
+		this.draw(character);
+		this.moveForward(1);
+
+		if(this.wrap && !this.cursor.infiniteWidth && this.cursor.x + this.cursor.columnWidth > this.cursor.maxColumnWidth * this.cursor.columnWidth){
 			this.moveDown(1);
 			this.cursor.carriageReturn();
-			this.eraseEndOfLine()
 		}
+
 	};
 	
 	this.draw = function(charCode) {
@@ -84,12 +84,12 @@ TERM.AnsiViewer = function (control){
 		this.cursor.y = 0;
 	};
 
-	this.moveBackward = function(val, erase) {
+	this.moveBackward = function(val) {
 		var movements = val;
 
 		while( movements > 0 ) {
 			this.cursor.moveBackward(1);
-			if(erase) this.draw(SPACE);
+			//if(this.erase) this.draw(SPACE);
 			movements--;
 		}
 	};
@@ -142,7 +142,9 @@ TERM.AnsiViewer = function (control){
 
 	this.eraseDown = function() {
 		ctx.fillStyle = BLACK_NORMAL;
-		ctx.fillRect(0, this.cursor.y, this.cursor.maxColumnWidth * this.cursor.columnWidth, (this.cursor.maxLineHeight * this.cursor.lineHeight) - this.cursor.y);
+		var w = (this.cursor.maxColumnWidth * this.cursor.columnWidth) - (this.cursor.x - this.cursor.columnWidth);
+		ctx.fillRect(this.cursor.x, this.cursor.y, w, this.cursor.lineHeight);
+		ctx.fillRect(0, this.cursor.y+this.cursor.lineHeight, this.cursor.maxColumnWidth * this.cursor.columnWidth, (this.cursor.maxLineHeight * this.cursor.lineHeight) - this.cursor.y);
 	};
 
 	this.eraseEndOfLine = function() {
@@ -189,14 +191,6 @@ TERM.AnsiViewer = function (control){
 	
 	this.setCursorVisible = function(state) {
 		this.cursor.visible = state
-	};
-
-	this.cursorOn = function() {
-		this.draw(219);
-	};
-
-	this.cursorOff = function() {
-		this.draw(255);
 	};
 
 	this.clearCanvas();
