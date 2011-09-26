@@ -1,20 +1,21 @@
 enyo.kind({
 	
   	name: "wTerm.Main",
-	kind: enyo.HFlexBox,
-	pack: 'center',
+	kind: enyo.VFlexBox,
+	align: 'center',
   	
   	components: [
 		{kind: "AppMenu", components: [
-			{caption: "Show Keyboard", onclick: "showKeyboard"}
+			{caption: "Show Keyboard"}
 		]},
-		{layoutKind: enyo.VFlexLayout, pack: 'end', components: [
+		{kind: "ApplicationEvents", onKeypress: 'keyPress'},
+		/*{layoutKind: enyo.VFlexLayout, pack: 'end', components: [
 			{kind: 'Button', caption: 'Esc', style: 'width: 60px; height: 60px;', onclick: 'buttonEsc'},
 			//{kind: 'Button', caption: 'Ctrl', style: 'width: 60px; height: 60px;'},
 			//{kind: 'Button', caption: 'Alt', style: 'width: 60px; height: 60px;'},
-		]},
-		{kind: 'wTerm.tty', name: 'tty'},
-		{layoutKind: enyo.VFlexLayout, pack: 'center', components: [
+		]},*/
+
+		/*{layoutKind: enyo.VFlexLayout, pack: 'center', components: [
 			{flex: 1},
 			{layoutKind: enyo.HFlexLayout, components: [
 				{kind: 'Button', caption: 'Ins', style: 'width: 60px; height: 60px;', onclick: 'buttonIns'},
@@ -38,14 +39,14 @@ enyo.kind({
 				{kind: 'Button', caption: 'Right', style: 'width: 60px; height: 60px;', onclick: 'buttonRight'},
 			]},
 			{flex: 1}
-		]},
+		]},*/
   	],
   	
-  	rendered: function() {
-  		this.inherited(arguments)
-  		enyo.keyboard.setManualMode(true)
-		this.showKeyboard()
-	},
+  	initComponents: function() {
+        this.inherited(arguments)
+        this.createComponent({kind: 'wTerm.tty', name: 'tty'})
+		this.createComponent({kind: 'wTerm.vkb', name: 'vkb', tty: this.$.tty})
+    },
 
 	showKeyboard: function() {
 		enyo.keyboard.show(0)
@@ -95,4 +96,8 @@ enyo.kind({
 		this.$.tty.writeString('\033[6~')
 	},
 
+	keyClicker: function(chr) {
+		this.$.tty.writeString(chr)
+		this.warn(chr,chr.charCodeAt(0))
+	}
 })

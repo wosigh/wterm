@@ -7,9 +7,13 @@ enyo.kind({
 	tty_id: null,
 	viewer: null,
 	fontmap: null,
+	
+	events: {
+		onkeypress: ""
+	},
   	
-  	components: [
-  		{kind: "ApplicationEvents", onUnload: "killService", onKeypress: 'keyPress'},
+  	chrome: [
+  		{kind: "ApplicationEvents", onUnload: "killService"},//, onKeypress: 'keyPress'},
   		{ name: 'ttyopen', kind: 'PalmService', subscribe: true,
 	      service: 'palm://us.ryanhope.wterm.tty/', method: 'open',
 	      onResponse: 'ttyOpenResponse' },
@@ -19,13 +23,14 @@ enyo.kind({
         { name: 'ttykill', kind: 'PalmService',
 	      service: 'palm://us.ryanhope.wterm.tty/', method: 'kill',
 	      onResponse: 'ttyKillResponse' },
-  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'term', content: '<div id="terminal"><canvas id="canvas" width="640" height="400"></canvas> </div>'}
+  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<div id="terminal"><canvas id="canvas" width="640" height="400"></canvas> </div>'}
   	],
 	
 	rendered: function() {
 		this.fontmap = new Image();
 		this.fontmap.onload = enyo.bind(this, 'fmReady')
 		this.fontmap.src = "src/jsTerm/fonts/ansilove_font_pc_80x25.png";
+		//VKI_attach('terminal')
 	},
 	
 	fmReady: function() {

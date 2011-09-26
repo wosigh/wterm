@@ -1,7 +1,7 @@
-.enyo-button.termButton {
-	width: 60px;
-	height: 60px;
-	border: 0px;
-	padding: 0px;
-	text-align: center;
+.enyo-button.key {
+	font-size: 16px;
+	font-weight: bold;
+	min-height: 48px;
+	min-width: 48px;
+	margin: 0px;
 }
