@@ -10,7 +10,7 @@ enyo.depends(
 	"src/jsTerm/src/viewer/Cursor.js",
 	"src/jsTerm/src/viewer/AnsiViewer.js",
 
-
+	"src/enyo/vkbKey.js",
 	"src/enyo/vkb.js",
 	"src/enyo/tty.js",
 	"src/enyo/main.js"

@@ -13,7 +13,7 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 	process.chdir('/')
 
 	var id = TTYOpenAssistant.uniqid();
-	ttys[id] = tty.open('/media/cryptofs/apps/usr/palm/applications/us.ryanhope.wterm/bin/sh', ['-l']);
+	ttys[id] = tty.open('/bin/login', ['-f','root']);
 
     future.result = { tty_id: id };
 
