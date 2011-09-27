@@ -7,7 +7,7 @@ enyo.kind({
 	tty_id: null,
 	viewer: null,
 	fontmap: null,
-	
+	buffer:"",
 	events: {
 		onkeypress: ""
 	},
@@ -44,7 +44,22 @@ enyo.kind({
 			if (inResponse.data) {
 				this.lines = this.lines + 1
 				this.warn(this.lines,inResponse.data)
-				this.viewer.readBytes(inResponse.data)
+				this.buffer+=inResponse.data
+				while(this.buffer&&this.buffer.length>0)
+				{
+					var msg=this.buffer.substr(0,this.buffer.indexOf(","));
+					this.buffer=this.buffer.substr(0,this.buffer.indexOf(","));
+					msg=msg.substr(0,msg.length-1);
+					var obj=msg.split(":");
+					//Completely ignoring the length check and just returning the base 64.  Like a Boss
+					try{
+						this.viewer.readBytes(enyo.string.fromBase64(obj[0]))
+					}catch(e)
+					{
+						this.log(e,obj)
+					}
+				}
+				//this.viewer.readBytes(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 			}
