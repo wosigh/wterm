@@ -135,7 +135,7 @@ enyo.kind({
   			{kind: 'Key', content: 'Esc', ontouchstart: 'btnClick'},
   		]},
   		{layoutKind: 'HFlexLayout', pack: 'center', components: [
-  			{kind: 'Key', content: 'Ctrl', ontouchstart: 'ctrlDown', ontouchend: 'ctrlUp'},
+  			{kind: 'Key', content: 'Ctrl', flex: 1, ontouchstart: 'ctrlDown', ontouchend: 'ctrlUp'},
   			{kind: 'Key', content: 'Fn', ontouchstart: 'fnDown', ontouchend: 'fnUp'},
   			{kind: 'Key', content: 'Alt', ontouchstart: 'altDown', ontouchend: 'altUp'},
   			{kind: 'Key', content: 'Space', flex: 4, ontouchstart: 'btnClick'},
