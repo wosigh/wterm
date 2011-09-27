@@ -18,8 +18,13 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
     future.result = { tty_id: id };
 
 	ttys[id][0].on('data', function(data) {
-		var s = subscription.get();
-		s.result = { data: data.toString() };
+		var i=0,j=0;
+		while(i+1000 < data.length) {
+			subscription.get().result={data:data.toString("base64",i,i+1000)}
+			j=i;
+			i+=1000;
+		}
+		subscription.get().result={data:data.toString("base64",j)};
 	});
 	
 };

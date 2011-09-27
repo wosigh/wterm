@@ -40,7 +40,7 @@ enyo.kind({
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
-				this.viewer.readBytes(inResponse.data)
+				this.viewer.readBytes(enyo.string.fromBase64(inResponse.data))
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 			}
