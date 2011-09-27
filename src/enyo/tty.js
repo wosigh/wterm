@@ -38,9 +38,12 @@ enyo.kind({
     	this.$.ttyopen.call()
 	},
 
+	lines: 0,
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
 			if (inResponse.data) {
+				this.lines = this.lines + 1
+				this.warn(this.lines,inResponse.data)
 				this.viewer.readBytes(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
