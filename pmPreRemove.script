@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NSRVID=us.ryanhope.wterm.tty
+NSRVID=us.ryanhope.wterm.tty.service
 
 APPS=/media/cryptofs/apps
 
@@ -13,8 +13,8 @@ APPS=/media/cryptofs/apps
 rm -f /var/usr/sbin/${NSRVID}
 
 # Remove the node dbus service
-rm -f /var/palm/ls2/services/prv/${NSRVID}.service
-rm -f /var/palm/ls2/services/pub/${NSRVID}.service
+rm -f /var/palm/ls2/services/prv/${NSRVID}
+rm -f /var/palm/ls2/services/pub/${NSRVID}
 
 # Remove the node ls2 roles
 rm -f /var/palm/ls2/roles/prv/${NSRVID}.json

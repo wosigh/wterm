@@ -2,11 +2,11 @@
   "role": {
      "exeName":"js",
      "type": "privileged",
-     "allowedNames": ["us.ryanhope.wterm.tty"]
+     "allowedNames": ["us.ryanhope.wterm.tty.service"]
   },
   "permissions": [
     {
-      "service":"us.ryanhope.wterm.tty",
+      "service":"us.ryanhope.wterm.tty.service",
       "inbound":["*"],
       "outbound":["*"]
     }

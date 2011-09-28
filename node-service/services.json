@@ -1,9 +1,9 @@
 {
-	"id": "us.ryanhope.wterm.tty",
+	"id": "us.ryanhope.wterm.tty.service",
 	"description": "TTY Service",
 	"services": [
 		{
-			"name": "us.ryanhope.wterm.tty",
+			"name": "us.ryanhope.wterm.tty.service",
 			"description": "TTY Service",
 			"assistant": "TTYService",
 			"commands": [

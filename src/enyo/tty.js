@@ -15,13 +15,13 @@ enyo.kind({
   	chrome: [
   		{kind: "ApplicationEvents", onUnload: "killService"},//, onKeypress: 'keyPress'},
   		{ name: 'ttyopen', kind: 'PalmService', subscribe: true,
-	      service: 'palm://us.ryanhope.wterm.tty/', method: 'open',
+	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'open',
 	      onResponse: 'ttyOpenResponse' },
 	    { name: 'ttyrun', kind: 'PalmService',
-	      service: 'palm://us.ryanhope.wterm.tty/', method: 'run',
+	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'run',
 	      onResponse: 'ttyRunResponse' },
         { name: 'ttykill', kind: 'PalmService',
-	      service: 'palm://us.ryanhope.wterm.tty/', method: 'kill',
+	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'kill',
 	      onResponse: 'ttyKillResponse' },
   		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<div id="terminal"><canvas id="canvas" width="640" height="400"></canvas> </div>'}
   	],
