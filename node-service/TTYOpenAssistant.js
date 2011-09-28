@@ -24,9 +24,7 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 			else
 				j = data.length
 			subscription.get().result={data:data.toString("base64",i,j)}
-			console.log('tittyfuck',i,j)
 		}
-		subscription.get().result={data:data.toString("base64",j)};
 	});
 	
 };
