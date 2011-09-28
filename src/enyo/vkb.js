@@ -1,18 +1,21 @@
 enyo.kind({
 	
-  	name: "wTerm.vkb",
+	name: "vkb",
   	kind: 'VFlexBox',
   	flex: 1,
   	width: '100%',
   	
-  	capsOn: false,
-  	shiftOn: false,
-  	fnOn: false,
-  	altOn: false,
-  	ctrlOn: false,
+	statics: {
+		shift: 1,
+		ctrl: 2,
+		alt: 4,
+		fn: 8,
+		caps: 16,
+	},
   	
   	published: {
-  		tty: null
+		tty: null,
+		mode: 0
   	},
 
   	components: [
@@ -120,13 +123,13 @@ enyo.kind({
 				this.tty.writeString(' ')
 				break
 			default:
-				if (this.ctrlOn && !this.fnOn && !this.altOn && !this.shiftOn) {
+				if (this.mode == this.ctrl) {
 					var base = key[0].toUpperCase().charCodeAt(0)
 					if (base > 63 && base < 96) {
 						this.warn(String.fromCharCode(base-64))
 						this.tty.writeString(String.fromCharCode(base-64))
 					}
-				} else if ((this.capsOn && !this.shiftOn) || (!this.capsOn && this.shiftOn)) {
+				} else if (this.mode == this.caps || this.mode == this.shift) {
 					if (key.length>1) {
 						this.tty.writeString(key[1])
 					} else {
@@ -139,40 +142,45 @@ enyo.kind({
 		
 	},
 	
-	toggleCaps: function() {
-		this.capsOn = !this.capsOn
+	// Handle special modifier key states here
+
+	toggleCaps: function(inSender, inEvent) {
+		if (inSender.down )
+			this.mode += this.caps
+		else
+			this.mode -= this.caps
 	},
 	
 	shiftDown: function() {
-		this.shiftOn = true
+		this.mode += this.shift
 	},
 	
 	shiftUp: function() {
-		this.shiftOn = false
+		this.mode -= this.shift
 	},
 	
 	fnDown: function() {
-		this.fnOn = true
+		this.mode += this.fn
 	},
 	
 	fnUp: function() {
-		this.fnOn = false
+		this.mode -= this.fn
 	},
 	
 	altDown: function() {
-		this.altOn = true
+		this.mode += this.alt
 	},
 	
 	altUp: function() {
-		this.altOn = false
+		this.mode -= this.alt
 	},
 	
 	ctrlDown: function() {
-		this.ctrlOn = true
+		this.mode += this.ctrl
 	},
 	
 	ctrlUp: function() {
-		this.ctrlOn = false
+		this.mode -= this.ctrl
 	}
 	
 })

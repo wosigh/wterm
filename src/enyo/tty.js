@@ -1,6 +1,6 @@
 enyo.kind({
 	
-  	name: "wTerm.tty",
+	name: "tty",
   	kind: enyo.Control,
   	
 	tty: null,

@@ -8,7 +8,7 @@ enyo.kind({
 		down: false,
 		depressed: false,
 		toggling: false,
-		disabled: false,
+		disabled: false
 	},
 	
 	events: {

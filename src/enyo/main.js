@@ -1,13 +1,13 @@
 enyo.kind({
 	
-  	name: "wTerm.Main",
+	name: "wTerm",
 	kind: enyo.VFlexBox,
 	align: 'center',
 
   	initComponents: function() {
         this.inherited(arguments)
-        this.createComponent({kind: 'wTerm.tty', name: 'tty'})
-		this.createComponent({kind: 'wTerm.vkb', name: 'vkb', tty: this.$.tty})
+        this.createComponent({kind: 'tty', name: 'tty'})
+		this.createComponent({kind: 'vkb', name: 'vkb', tty: this.$.tty})
     }
     
 })
