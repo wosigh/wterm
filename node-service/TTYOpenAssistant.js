@@ -18,11 +18,13 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
     future.result = { tty_id: id };
 
 	ttys[id][0].on('data', function(data) {
-		var i=0,j=0;
-		while(i+1000 < data.length) {
-			subscription.get().result={data:data.toString("base64",i,i+1000)}
-			j=i;
-			i+=1000;
+		for(var i=0,j=0; i < data.length;i=j) {
+			if (i+1000<data.length)
+				j = i + 1000
+			else
+				j = data.length
+			subscription.get().result={data:data.toString("base64",i,j)}
+			console.log('tittyfuck',i,j)
 		}
 		subscription.get().result={data:data.toString("base64",j)};
 	});
