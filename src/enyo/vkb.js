@@ -5,13 +5,11 @@ enyo.kind({
   	flex: 1,
   	width: '100%',
   	
-	statics: {
-		shift: 1,
-		ctrl: 2,
-		alt: 4,
-		fn: 8,
-		caps: 16,
-	},
+	shift: 1,
+	ctrl: 2,
+	alt: 4,
+	fn: 8,
+	caps: 16,
   	
   	published: {
 		tty: null,
