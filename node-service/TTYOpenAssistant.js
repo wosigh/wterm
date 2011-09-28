@@ -25,6 +25,8 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 				j = data.length
 			subscription.get().result={data:data.toString("base64",i,j)}
 		}
+		subscription.get().result={doWrite:true}
+		data = null
 	});
 	
 };

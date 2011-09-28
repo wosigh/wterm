@@ -7,6 +7,7 @@ enyo.kind({
 	tty_id: null,
 	viewer: null,
 	fontmap: null,
+	buffer: '',
 	
 	events: {
 		onkeypress: ""
@@ -39,11 +40,15 @@ enyo.kind({
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
-			if (inResponse.data) {
-				this.viewer.readBytes(enyo.string.fromBase64(inResponse.data))
+			if (inResponse.doWrite) {
+				this.viewer.readBytes(this.buffer)
+				this.buffer = ''
+			} else if (inResponse.data) {
+				this.buffer += enyo.string.fromBase64(inResponse.data)
 			} else if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 			}
+			inResponse.data = null
 	    } else {
 			this.error(inResponse.errorCode, inResponse.errorText)
 	    }
