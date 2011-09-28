@@ -29,7 +29,7 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 };
 TTYOpenAssistant.opencmd=function(cmd,args,callback)
 {
-	var env = { TERM: 'xterm', COLUMNS:120, ROWS:24 };
+	var env = { TERM: 'xterm', COLUMNS:125, ROWS:25 };
 	  for (var k in process.env) {
 	    env[k] = process.env[k];
 	  }
