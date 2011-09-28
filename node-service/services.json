@@ -2,6 +2,7 @@
 	"id": "us.ryanhope.wterm.tty.service",
 	"description": "TTY Service",
 	"commandTimeout": 5,
+	"activityTimeout": 5,
 	"services": [
 		{
 			"name": "us.ryanhope.wterm.tty.service",

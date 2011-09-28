@@ -24,7 +24,7 @@ enyo.kind({
         { name: 'ttykill', kind: 'PalmService',
 	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'kill',
 	      onResponse: 'ttyKillResponse' },
-  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<div id="terminal"><canvas id="canvas" width="640" height="400"></canvas> </div>'}
+  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<div id="terminal"><canvas id="canvas" width="1000" height="400"></canvas> </div>'}
   	],
 	
 	rendered: function() {
