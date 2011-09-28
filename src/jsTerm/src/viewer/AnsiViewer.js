@@ -23,12 +23,12 @@ TERM.AnsiViewer = function (control){
 	
 	this.readBytes = function (bytes) {
 		if (this.cursor.visible) {
-			this.invertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight)
+			this.revertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight,3/2)
 			this.cursor.visible = false
 		}
 		this.parser.parse(bytes);
 		if (this.cursor.enabled && !this.cursor.visible) {
-			this.invertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight)
+			this.invertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight,2/3)
 			this.cursor.visible = true
 		}
 	};
@@ -72,12 +72,23 @@ TERM.AnsiViewer = function (control){
 
 	};
 	
-	this.invertArea = function(x,y,w,h) {
+	this.invertArea = function(x,y,w,h,f) {
 		var imageData = ctx.getImageData(x,y,w,h);
 		for (var i = 0, n = imageData.data.length; i < n; i += 4) {
-		    imageData.data[i] = 255 - imageData.data[i]; // red
-		    imageData.data[i + 1] = 255 - imageData.data[i + 1]; // green
-		    imageData.data[i + 2] = 255 - imageData.data[i + 2]; // blue
+		    imageData.data[i] = Math.ceil((255 - imageData.data[i]) * f); // red
+		    imageData.data[i + 1] = Math.ceil((255 - imageData.data[i + 1]) * f); // green
+		    imageData.data[i + 2] = Math.ceil((255 - imageData.data[i + 2]) * f); // blue
+		    // i+3 is alpha (the fourth element)
+		}
+		ctx.putImageData(imageData, x, y);
+	},
+	
+	this.revertArea = function(x,y,w,h,f) {
+		var imageData = ctx.getImageData(x,y,w,h);
+		for (var i = 0, n = imageData.data.length; i < n; i += 4) {
+		    imageData.data[i] = 255 - Math.ceil(imageData.data[i]*f); // red
+		    imageData.data[i + 1] = 255 - Math.ceil(imageData.data[i + 1]*f); // green
+		    imageData.data[i + 2] = 255 - Math.ceil(imageData.data[i + 2]*f); // blue
 		    // i+3 is alpha (the fourth element)
 		}
 		ctx.putImageData(imageData, x, y);
