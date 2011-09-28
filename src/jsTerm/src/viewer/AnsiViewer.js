@@ -22,7 +22,15 @@ TERM.AnsiViewer = function (control){
 	var erase = false;
 	
 	this.readBytes = function (bytes) {
+		if (this.cursor.visible) {
+			this.invertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight)
+			this.cursor.visible = false
+		}
 		this.parser.parse(bytes);
+		if (this.cursor.enabled && !this.cursor.visible) {
+			this.invertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight)
+			this.cursor.visible = true
+		}
 	};
 	
 	this.clearCanvas = function(){
@@ -53,7 +61,7 @@ TERM.AnsiViewer = function (control){
 	};
 
 	this.drawCharacter = function(character) {
-
+		
 		this.draw(character);
 		this.moveForward(1);
 
@@ -63,6 +71,17 @@ TERM.AnsiViewer = function (control){
 		}
 
 	};
+	
+	this.invertArea = function(x,y,w,h) {
+		var imageData = ctx.getImageData(x,y,w,h);
+		for (var i = 0, n = imageData.data.length; i < n; i += 4) {
+		    imageData.data[i] = 255 - imageData.data[i]; // red
+		    imageData.data[i + 1] = 255 - imageData.data[i + 1]; // green
+		    imageData.data[i + 2] = 255 - imageData.data[i + 2]; // blue
+		    // i+3 is alpha (the fourth element)
+		}
+		ctx.putImageData(imageData, x, y);
+	},
 	
 	this.draw = function(charCode) {
 		//console.log(charCode +" "+ this.cursor.x +" "+ this.cursor.y)
@@ -189,8 +208,8 @@ TERM.AnsiViewer = function (control){
 		ctx.putImageData(canvasData, 0, this.cursor.lineHeight*(topMargin-1));
 	};
 	
-	this.setCursorVisible = function(state) {
-		this.cursor.visible = state
+	this.setCursorEnabled = function(state) {
+		this.cursor.enabled = state
 	};
 
 	this.clearCanvas();

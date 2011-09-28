@@ -368,7 +368,7 @@ TERM.EscapeSequencer = function (viewer){
 	this.setMode = function(params){
 		if (params[2]==QUESTION_MARK) {
 			if (params[3]==DIGIT_TWO && params[4]==DIGIT_FIVE) {
-				viewer.setCursorVisible(true)
+				viewer.setCursorEnabled(true)
 				return
 			}
 		} else if (params[2]==DIGIT_SEVEN) {
@@ -381,7 +381,7 @@ TERM.EscapeSequencer = function (viewer){
 	this.resetMode = function(params){
 		if (params[2]==QUESTION_MARK) {
 			if (params[3]==DIGIT_TWO && params[4]==DIGIT_FIVE) {
-				viewer.setCursorVisible(false)
+				viewer.setCursorEnabled(false)
 				return
 			}
 		} else if (params[2]==DIGIT_SEVEN) {

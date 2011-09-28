@@ -14,7 +14,8 @@ TERM.Cursor = function (){
 	this.maxColumns = 80;
 	this.infiniteWidth = false;
 	this.infiniteHeight = false;
-	this.visible = true;
+	this.visible = false;
+	this.enabled = true;
 		
 	this.moveForward = function (columns) {
 		if (this.position.x + (columns*this.columnWidth) <= this.maxColumns * this.columnWidth)
