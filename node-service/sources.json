@@ -6,6 +6,7 @@
 	{ "source": "prologue.js" },
 	{ "source": "TTYService.js" },
 	{ "source":	"KillAssistant.js" },
+	{ "source":	"ResizeAssistant.js" },
 	{ "source":	"TTYOpenAssistant.js" },
 	{ "source":	"TTYRunAssistant.js" }
 ]
