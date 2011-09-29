@@ -24,6 +24,11 @@
 					"name": "kill", 
 					"assistant": "KillAssistant",
 					"public": true
+				},
+				{
+					"name": "resize",
+					"assistant": "ResizeAssistant",
+					"public": true
 				}
 			]
 		}

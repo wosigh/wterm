@@ -9,6 +9,8 @@ enyo.kind({
 	fontmap: null,
 	buffer: '',
 	
+	prefs: null,
+
 	events: {
 		onkeypress: ""
 	},
