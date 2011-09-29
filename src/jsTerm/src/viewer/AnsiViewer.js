@@ -209,8 +209,6 @@ TERM.AnsiViewer = function (control){
 	this.scrollScreen = function(start, end) {
 		topMargin = start;
 		botMargin = end;
-
-		handleHome();
 	};
 			
 	this.scrollUp = function(val) {

@@ -47,10 +47,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.executeCommand = function(command) {
-		/*var cmd = ''
-		for (var i in command)
-			cmd = cmd + String.fromCharCode(command[i])
-		enyo.warn('Execute',cmd)*/
 		try {
 			this.actionCharacterLib[ command[command.length-1] ]( command );
 		} catch(error) {
@@ -307,7 +303,7 @@ TERM.EscapeSequencer = function (viewer){
 	
 	this.scrollScreen = function(params) {
 		if(params.length==3){
-			viewer.scrollScreen();
+			viewer.scrollScreen(1,viewer.cursor.maxLineHeight);
 		} else {
 			var lastCharacter = params[params.length-1];
 		
