@@ -339,25 +339,21 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.eraseLine = function(params) {
-		if( params[2]==DIGIT_ONE ){
+		if( params[2]==DIGIT_ONE )
 			viewer.eraseStartOfLine();
-		} else if( params[2]==DIGIT_TWO ) {
+		else if( params[2]==DIGIT_TWO )
 			viewer.eraseLine();
-		} else {
+		else
 			viewer.eraseEndOfLine();
-		}		
 	};
 	
 	this.eraseDisplay = function(params) {
-		if( params[2]==DIGIT_ONE ){
+		if( params[2]==DIGIT_ONE )
 			viewer.eraseUp();
-			//viewer.reposition(0, 0);
-		} else if( params[2]==DIGIT_TWO ) {
+		else if( params[2]==DIGIT_TWO )
 			viewer.eraseScreen();
-			viewer.reposition(0, 0);
-		} else {
+		else
 			viewer.eraseDown();
-		}
 	};
 	
 	// Terminal functions
