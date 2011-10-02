@@ -14,8 +14,9 @@ enyo.kind({
 
   	initComponents: function() {
         this.inherited(arguments)
-        this.createComponent({kind: 'tty', name: 'tty', prefs: this.prefs})
+        this.createComponent({kind: 'tty', name: 'tty', prefs: this.prefs, vkb: null})
 		this.createComponent({kind: 'vkb', name: 'vkb', tty: this.$.tty})
+		this.$.tty.vkb = this.$.vkb
 		this.createComponent({kind: 'Preferences', name: 'preferences', prefs: this.prefs, onClose: 'refresh'})
 	},
 

@@ -27,9 +27,10 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 	});
 	
 };
+
 TTYOpenAssistant.opencmd=function(cmd,args,callback) {
 
-	var env = { TERM: 'linux', COLUMNS:125, ROWS:25 };
+	var env = { TERM: 'linux', COLUMNS:127, ROWS:25 };
 	var fileds=binding.openpty();
 	binding.setWindowSize(fileds[0],env.ROWS,env.COLUMNS);
 	var streams=[];

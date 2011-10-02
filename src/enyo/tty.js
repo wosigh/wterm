@@ -8,6 +8,21 @@ enyo.kind({
 	viewer: null,
 	fontmap: null,
 	buffer: '',
+
+	vkb: null,
+
+	published: {
+		modes: {
+			wrap: false,
+			newline: false,
+			reverse: false,
+			charset: 0,
+			charsetG0: 'US',
+			charsetG1: 'US',
+			origin: 0,
+			insert: false,
+		}
+	},
 	
 	prefs: null,
 
@@ -26,7 +41,10 @@ enyo.kind({
         { name: 'ttykill', kind: 'PalmService',
 	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'kill',
 	      onResponse: 'ttyKillResponse' },
-  		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<div id="terminal"><canvas id="canvas" width="1000" height="400"></canvas> </div>'}
+        { name: 'ttyresize', kind: 'PalmService',
+	      service: 'palm://us.ryanhope.wterm.tty.service/', method: 'resize',
+	      onResponse: 'ttyResizeResponse' },
+		{kind: enyo.Control, allowHtml: true, name: 'tty', className: 'keyboardInput', content: '<canvas id="canvas" width="1016" height="400"></canvas>'}
   	],
 	
 	rendered: function() {
@@ -57,7 +75,11 @@ enyo.kind({
 	},
 	
 	ttyKillResponse: function(inSender, inResponse, inRequest) {
-		this.error(inResponse)
+		//this.error(inResponse)
+	},
+	
+	ttyResizeResponse: function(inSender, inResponse, inRequest) {
+		//this.error(inResponse)
 	},
 	
 	killService: function() {
@@ -70,6 +92,14 @@ enyo.kind({
 
 	writeString: function(str) {
 		this.$.ttyrun.call({id: this.tty_id, data: str})
+	},
+	
+	resize: function(rows, cols) {
+		this.$.tty.applyStyle('width',cols*8)
+		this.$.tty.applyStyle('height',rows*16)
+		this.viewer.canvas.width = cols*8
+		this.viewer.canvas.height = rows*16
+		this.$.ttyresize.call({id: this.tty_id, rows: rows, cols: cols})
 	}
 
 })

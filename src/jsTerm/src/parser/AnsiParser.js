@@ -1,12 +1,12 @@
 /**
- * @author Peter Nitsch
+ * @author Ryan Hope
  */
 
 TERM.AnsiParser = function (viewer){
 	
 	var viewer = viewer;
 	var escapeCommand = [];
-	var bufferEscapeCommand = false;
+	var bufferEscapeCommand = 0;
 	
 	this.escapeCommands = new TERM.EscapeSequencer(viewer);
 	this._bytes;
@@ -28,58 +28,89 @@ TERM.AnsiParser = function (viewer){
 		this._bytes.position = 0;
 	};
 	
-	this._exceptionsLib = [];
-	this._exceptions = [];
-	
-	this.hasException = function( code ) {
-		if( this._exceptions.indexOf(code) != -1 )
-			return true;
-		return false;
-	};
-	
-	this.writeException = function( code, callback ) {
-		if( !this.hasException(code) ){
-			this._exceptionsLib[code] = callback;
-			this._exceptions.push(code);
-		}
-	};
-	
 	this.readByte = function (b) {
 		if(b == ESCAPE) {
 			escapeCommand = [];
 			escapeCommand.push(b);
-			bufferEscapeCommand = true;
+			bufferEscapeCommand = 1;
 		} else {
-			if(bufferEscapeCommand){
+			if(bufferEscapeCommand == 1) {
 				escapeCommand.push(b);
-				if( this.escapeCommands.checkCommandAction(escapeCommand.length, b) ) {
-					this.escapeCommands.executeCommand(escapeCommand);
-					bufferEscapeCommand = false;
+				if (b == LEFT_SQUARE_BRACKET)
+					bufferEscapeCommand = 3;
+				else {
+					bufferEscapeCommand = 2;
+					if (b>=DIGIT_ZERO && b<=TILDE) {
+						this.escapeCommands.executeESC(
+							null,
+							String.fromCharCode(escapeCommand[1])
+						);
+						bufferEscapeCommand = 0;
+					}
 				}
-			} else if( this.hasException(b) ) {
-				this._exceptionsLib[b]( b, this._bytes );
+			} else if(bufferEscapeCommand == 2) {
+				escapeCommand.push(b);
+				if (b>=DIGIT_ZERO && b<=TILDE) {
+					if (escapeCommand.length==3) {
+						this.escapeCommands.executeESC(
+							String.fromCharCode(escapeCommand[1]),
+							String.fromCharCode(escapeCommand[2])
+						);
+					}
+					bufferEscapeCommand = 0;
+				}
+			} else if(bufferEscapeCommand == 3) {
+				escapeCommand.push(b);
+				if (b>=COMMERCIAL_AT && b<=TILDE) {
+					this.escapeCommands.executeCSI(
+						String.fromCharCode(escapeCommand[escapeCommand.length-1]),
+						String.fromCharCode.apply(null, escapeCommand.slice(2,escapeCommand.length-1))
+					);
+					bufferEscapeCommand = 0;
+				}
 			} else if(b >= SPACE) {
 				viewer.drawCharacter(b);
 			} else {
 				switch(b) {
 					case BACKSPACE:
 						viewer.moveBackward(1);
-					break;
+						break;
 
+					case VERTICAL_TABULATION:
+					case FORM_FEED:
 					case LINE_FEED:
-						viewer.carriageReturn();
 						viewer.moveDown(1);
-						viewer.eraseEndOfLine();
-					break;
+						if (viewer.control.modes['newline'])
+							viewer.carriageReturn();
+						break;
 
 					case CARRIAGE_RETURN:
 						viewer.carriageReturn();
-					break;
+						break;
 
-					case FORM_FEED:
-						viewer.eraseScreen();
-						viewer.reposition(0, 0);
-					break;
+					case SHIFT_OUT:
+						viewer.control.modes['charset'] = 1
+						break;
+
+					case SHIFT_IN:
+						viewer.control.modes['charset'] = 0
+						break;
+
+					case HORIZONTAL_TABULATION:
+						var newX = -1
+						for (var k in viewer.tabs) {
+							if (k>viewer.cursor.x/viewer.cursor.columnWidth) {
+								newX = (k-1)*viewer.cursor.columnWidth
+								break;
+							}
+						}
+						if (newX == -1)
+							newX = (viewer.cursor.maxColumnWidth-1)*viewer.cursor.columnWidth
+						viewer.cursor.x = newX
+						break;
+
+					default:
+						enyo.warn('CTRL',b);
 				}
 			}
 		}

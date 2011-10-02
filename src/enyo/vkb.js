@@ -17,8 +17,25 @@ enyo.kind({
   	},
 
   	components: [
-  		{layoutKind: 'HFlexLayout', pack: 'center', components: [
-  			{kind: 'vkbKey', content: '~<br>`', ontouchstart: 'btnClick'},
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'Esc', ontouchstart: 'btnClick'},
+			{flex:1},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F1', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F2', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F3', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F4', ontouchstart: 'fnbtnClick'},
+			{flex:1},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F5', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F6', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F7', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F8', ontouchstart: 'fnbtnClick'},
+			{flex:1},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F9', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F10', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F11', ontouchstart: 'fnbtnClick'},
+			{kind: 'vkbKey', className: 'enyo-button key-small', content: 'F12', ontouchstart: 'fnbtnClick'}
+		]},
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
   			{kind: 'vkbKey', content: '!<br>1', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: '@<br>2', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: '#<br>3', ontouchstart: 'btnClick'},
@@ -33,7 +50,7 @@ enyo.kind({
   			{kind: 'vkbKey', content: '+<br>=', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'Bksp', flex: 1, ontouchstart: 'btnClick'},
   		]},
-  		{layoutKind: 'HFlexLayout', pack: 'center', components: [
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
   			{kind: 'vkbKey', content: 'Tab', flex: 1, ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'q', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'w', ontouchstart: 'btnClick'},
@@ -49,8 +66,8 @@ enyo.kind({
   			{kind: 'vkbKey', content: '}<br>]', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: '|<br>\\', ontouchstart: 'btnClick'},
   		]},
-  		{layoutKind: 'HFlexLayout', pack: 'center', components: [
-  			{kind: 'vkbKey', content: 'Caps Lock', toggling: true, flex: 1, ontouchstart: 'toggleCaps'},
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
+			{kind: 'vkbKey', content: 'Caps Lock', flex: 1, toggling: true, ontouchstart: 'toggleCaps'},
   			{kind: 'vkbKey', content: 'a', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 's', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'd', ontouchstart: 'btnClick'},
@@ -64,7 +81,7 @@ enyo.kind({
   			{kind: 'vkbKey', content: '\"<br>\'', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'Enter', flex: 1, ontouchstart: 'btnClick'},
   		]},
-  		{layoutKind: 'HFlexLayout', pack: 'center', components: [
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
   			{kind: 'vkbKey', content: 'Shift', flex: 1, ontouchstart: 'shiftDown', ontouchend: 'shiftUp'},
   			{kind: 'vkbKey', content: 'z', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'x', ontouchstart: 'btnClick'},
@@ -74,19 +91,20 @@ enyo.kind({
   			{kind: 'vkbKey', content: 'n', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'm', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: '<<br>,', ontouchstart: 'btnClick'},
-  			{kind: 'vkbKey', content: '><br>.', ontouchstart: 'btnClick'},
-  			{kind: 'vkbKey', content: '?<br>/', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'Up', ontouchstart: 'btnClick'},
-  			{kind: 'vkbKey', content: 'Esc', ontouchstart: 'btnClick'},
+			{kind: 'vkbKey', content: '><br>.', ontouchstart: 'btnClick'},
+			{kind: 'vkbKey', content: 'Shift', style: 'min-width: 120px;', ontouchstart: 'shiftDown', ontouchend: 'shiftUp'},
   		]},
-  		{layoutKind: 'HFlexLayout', pack: 'center', components: [
-  			{kind: 'vkbKey', content: 'Ctrl', ontouchstart: 'ctrlDown', ontouchend: 'ctrlUp'},
+		{layoutKind: 'HFlexLayout', pack: 'end', components: [
+			{kind: 'vkbKey', content: 'Ctrl', flex: .6, ontouchstart: 'ctrlDown', ontouchend: 'ctrlUp'},
   			{kind: 'vkbKey', content: 'Fn', ontouchstart: 'fnDown', ontouchend: 'fnUp'},
   			{kind: 'vkbKey', content: 'Alt', ontouchstart: 'altDown', ontouchend: 'altUp'},
   			{kind: 'vkbKey', content: 'Space', flex: 4, ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'Left', ontouchstart: 'btnClick'},
 			{kind: 'vkbKey', content: 'Down', ontouchstart: 'btnClick'},
   			{kind: 'vkbKey', content: 'Right', ontouchstart: 'btnClick'},
+			{kind: 'vkbKey', content: '~<br>`', ontouchstart: 'btnClick'},
+			{kind: 'vkbKey', content: '?<br>/', ontouchstart: 'btnClick'},
   		]},
   	],
   	
@@ -109,7 +127,11 @@ enyo.kind({
 				this.tty.writeString('\033[C')
 				break
 			case 'Enter':
-				this.tty.writeString('\x0a')
+				if (this.tty.modes['newline']) {
+					this.tty.writeString('\x0d')
+					this.tty.writeString('\x0a')
+				} else
+					this.tty.writeString('\x0d')
 				break
 			case 'Esc':
 				this.tty.writeString('\x1b')
@@ -123,10 +145,10 @@ enyo.kind({
 			default:
 				if (this.mode == this.ctrl) {
 					var base = key[0].toUpperCase().charCodeAt(0)
-					if (base > 63 && base < 96) {
-						this.warn(String.fromCharCode(base-64))
+					if (key.length>1 && (key[1]=="@" || key[1]=="~" || key[1]=="^" || key[1]=="?" || key[1]=="_"))
+						base = key[1].charCodeAt(0)
+					if (base > 63 && base < 96)
 						this.tty.writeString(String.fromCharCode(base-64))
-					}
 				} else if (this.mode == this.caps || this.mode == this.shift) {
 					if (key.length>1) {
 						this.tty.writeString(key[1])
