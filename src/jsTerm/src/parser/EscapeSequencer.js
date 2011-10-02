@@ -92,7 +92,6 @@ TERM.EscapeSequencer = function (viewer){
 					enyo.warn('DECCKM','Application')
 					break;
 				case '?3':
-					enyo.log('DECCOLM','132 column')
 					viewer.resize(25,127)
 					break;
 				case '?4':
@@ -155,7 +154,6 @@ TERM.EscapeSequencer = function (viewer){
 					enyo.warn('DECANM','VT52')
 					break;
 				case '?3':
-					enyo.log('DECCOLM','80 column')
 					viewer.resize(25,80)
 					break;
 				case '?4':
@@ -216,7 +214,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.scrollScreen = function(params) {
-		enyo.warn('Scroll Region', params)
 		if (params.length == 2)
 			viewer.scrollScreen(parseInt(params[0]),parseInt(params[1]));
 		else
@@ -229,14 +226,12 @@ TERM.EscapeSequencer = function (viewer){
 		} else {
 			var line = parseInt(params[0])
 			var column = parseInt(params[1])
-			enyo.log('CUP',line,column)
 			viewer.reposition(column-1, line-1)
 		}
 	};
 	
 	this.deleteLines = function(params) {
 		var lines = (params[0] == '') ? 1 : parseInt(params[0])
-		enyo.warn('Delete Line', lines)
 		viewer.deleteLines(lines)
 	};
 
@@ -272,7 +267,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.cursorUp = function(params) {
-		enyo.error('UP',params)
 		var value = parseInt(params[0]) || 1
 		viewer.cursor.position.y -= viewer.cursor.lineHeight*value
 		if (viewer.cursor.position.y < (viewer.topMargin-1)*viewer.cursor.lineHeight)
@@ -280,7 +274,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.cursorDown = function(params) {
-		enyo.error('DOWN',params)
 		var value = parseInt(params[0]) || 1
 		viewer.cursor.position.y += viewer.cursor.lineHeight*value
 		if (viewer.cursor.position.y > (viewer.botMargin-1)*viewer.cursor.lineHeight)
@@ -288,7 +281,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.cursorForward = function(params) {
-		enyo.error('FORWARD',params)
 		var value = parseInt(params[0]) || 1
 		viewer.cursor.position.x += viewer.cursor.columnWidth*value
 		if (viewer.cursor.position.x > viewer.cursor.columnWidth*(viewer.cursor.maxColumnWidth-1))
@@ -296,7 +288,6 @@ TERM.EscapeSequencer = function (viewer){
 	};
 	
 	this.cursorBackward = function(params) {
-		enyo.error('BACKWARD',params)
 		var value = parseInt(params[0]) || 1
 		viewer.cursor.position.x -= viewer.cursor.columnWidth*value
 		if (viewer.cursor.position.x < 0)
