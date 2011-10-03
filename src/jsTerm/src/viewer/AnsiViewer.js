@@ -17,7 +17,6 @@ TERM.AnsiViewer = function (control){
 	var topMargin = 1;
 	var botMargin = 25;
 	var ctx = canvas.getContext("2d");
-	var scroll = true;
 	var _savedPosition = new jsTerm.Point();
 	this.tabs = [];
 
@@ -93,10 +92,10 @@ TERM.AnsiViewer = function (control){
 			this.drawUnderline();
 		this.moveForward(1);
 
-		if(this.control.modes['wrap'] && !this.cursor.infiniteWidth && this.cursor.x + this.cursor.columnWidth > this.cursor.maxColumnWidth * this.cursor.columnWidth) {
+		/*if(this.control.modes['wrap'] && !this.cursor.infiniteWidth && this.cursor.x + this.cursor.columnWidth > this.cursor.maxColumnWidth * this.cursor.columnWidth) {
 			this.moveDown(1);
 			this.carriageReturn();
-		}
+		}*/
 
 	};
 	
@@ -162,8 +161,10 @@ TERM.AnsiViewer = function (control){
 	};
 
 	this.moveDown = function(val) {
-		if(this.cursor.y >= this.cursor.lineHeight*(botMargin-1) && scroll){
+		if(this.cursor.y >= this.cursor.lineHeight*(botMargin-1)) {
 			this.scrollUp(1);
+			if(this.cursor.y > this.cursor.lineHeight*(botMargin-1))
+				this.cursor.y = this.cursor.lineHeight*(botMargin-1)
 		} else {
 			this.cursor.moveDown(val);
 		}
@@ -217,7 +218,8 @@ TERM.AnsiViewer = function (control){
 
 	this.eraseScrollRegion = function() {
 		ctx.fillStyle = BLACK_NORMAL;
-		ctx.fillRect(0, topMargin*this.cursor.lineHeight, this.cursor.maxColumnWidth * this.cursor.columnWidth, (this.cursor.maxLineHeight * this.cursor.lineHeight) - (botMargin-topMargin)*this.cursor.lineHeight);
+		enyo.log(topMargin,botMargin,0,topMargin*this.cursor.lineHeight,this.cursor.maxColumnWidth * this.cursor.columnWidth, (botMargin-topMargin)*this.cursor.lineHeight)
+		ctx.fillRect(0, topMargin*this.cursor.lineHeight, this.cursor.maxColumnWidth * this.cursor.columnWidth, (botMargin-topMargin)*this.cursor.lineHeight);
 	};
 
 	this.eraseEndOfLine = function() {
@@ -260,8 +262,9 @@ TERM.AnsiViewer = function (control){
 			
 	this.scrollUp = function(val) {
 		var canvasData = ctx.getImageData(0, topMargin * this.cursor.lineHeight, this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * (botMargin-topMargin));
-		this.eraseScrollRegion();
 		ctx.putImageData(canvasData, 0, this.cursor.lineHeight*(topMargin-1));
+		ctx.fillStyle = BLACK_NORMAL;
+		ctx.fillRect(0, this.cursor.lineHeight * (botMargin-1), this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * botMargin);
 	};
 
 	this.setCursorEnabled = function(state) {
@@ -279,7 +282,7 @@ TERM.AnsiViewer = function (control){
 		var canvasData = null
 		for (var i=0; i<val; i++) {
 			canvasData = ctx.getImageData(0, this.cursor.position.y+this.cursor.lineHeight, this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * botMargin-this.cursor.position.y);
-			this.eraseScrollRegion();
+			//this.eraseScrollRegion();
 			ctx.putImageData(canvasData, 0, this.cursor.position.y);
 		}
 	};
@@ -289,6 +292,11 @@ TERM.AnsiViewer = function (control){
 		this.control.modes['charsetG0'] = 'US'
 		this.control.modes['charsetG1'] = 'US'
 		this.control.modes['charset'] = 0
+		this.control.modes['wrap'] = false
+		this.control.modes['newline'] = false
+		this.control.modes['reverse'] = false
+		this.control.modes['origin'] = 0
+		this.control.modes['insert'] = false
 		this.parser.escapeCommands._bold = false;
 		this.parser.escapeCommands._reverse = false;
 		this.parser.escapeCommands._currentForegroundColor = this.parser.escapeCommands._defaultForgroundColor;
