@@ -60,15 +60,22 @@ enyo.kind({
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 	    if (inResponse.returnValue === true) {
-			if (inResponse.doWrite) {
-				this.viewer.readBytes(this.buffer)
-				this.buffer = ''
-			} else if (inResponse.data) {
-				this.buffer += enyo.string.fromBase64(inResponse.data)
-			} else if (inResponse.tty_id) {
-				this.tty_id = inResponse.tty_id
+			enyo.log(inResponse)
+			if (this.viewer.cursor.visible)
+				this.viewer.cursorHide()
+			switch (inResponse.type) {
+				case 'text':
+					this.viewer.writeText(inResponse.params)
+					break;
+				case 'carriageReturn':
+					this.viewer.carriageReturn()
+					break;
+				case 'moveDown':
+					this.viewer.moveDown(inResponse.params)
+					break;
 			}
-			inResponse.data = null
+			if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
+				this.viewer.cursorShow()
 	    } else {
 			this.error(inResponse.errorCode, inResponse.errorText)
 	    }

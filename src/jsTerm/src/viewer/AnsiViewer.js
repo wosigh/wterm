@@ -6,7 +6,7 @@ TERM.AnsiViewer = function (control){
 	
 	this.control = control;
 	this.cursor = new TERM.Cursor();
-	this.parser = new TERM.AnsiParser(this);
+	//this.parser = new TERM.AnsiParser(this);
 
 	this.underline = false;
 
@@ -30,12 +30,9 @@ TERM.AnsiViewer = function (control){
 		this.cursor.visible = true
 	};
 
-	this.readBytes = function (bytes) {
-		if (this.cursor.visible)
-			this.cursorHide()
-		this.parser.parse(bytes);
-		if (this.cursor.enabled && !this.cursor.visible)
-			this.cursorShow()
+	this.writeText = function (string) {
+		for (var i in string)
+			this.drawCharacter(string.charCodeAt(i))
 	};
 
 	this.clearCanvas = function(){
