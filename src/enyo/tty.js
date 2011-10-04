@@ -59,26 +59,29 @@ enyo.kind({
 	},
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
-	    if (inResponse.returnValue === true) {
-			enyo.log(inResponse)
-			if (this.viewer.cursor.visible)
-				this.viewer.cursorHide()
-			switch (inResponse.type) {
-				case 'text':
-					this.viewer.writeText(inResponse.params)
-					break;
-				case 'carriageReturn':
-					this.viewer.carriageReturn()
-					break;
-				case 'moveDown':
-					this.viewer.moveDown(inResponse.params)
-					break;
+		if (inResponse.returnValue === true) {
+			if (inResponse.tty_id) {
+				this.tty_id = inResponse.tty_id
+			} else {
+				if (this.viewer.cursor.visible)
+					this.viewer.cursorHide()
+				switch (inResponse.type) {
+					case 'text':
+						this.viewer.writeText(inResponse.params)
+						break;
+					case 'carriageReturn':
+						this.viewer.carriageReturn()
+						break;
+					case 'moveDown':
+						this.viewer.moveDown(inResponse.params)
+						break;
+				}
+				if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
+					this.viewer.cursorShow()
 			}
-			if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
-				this.viewer.cursorShow()
-	    } else {
+		} else {
 			this.error(inResponse.errorCode, inResponse.errorText)
-	    }
+		}
 	},
 	
 	ttyKillResponse: function(inSender, inResponse, inRequest) {

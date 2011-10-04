@@ -273,43 +273,43 @@ TTYOpenAssistant.prototype.setup = function() {
 	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 	
-	/*this.commandsESC[DIGIT_EIGHT] = this.dec8; //this.cursorRestore
-	this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset;
-	this.commandsESC[LATIN_CAPITAL_LETTER_A] = this.charsetUK;
-	this.commandsESC[LATIN_CAPITAL_LETTER_B] = this.charsetUS;
-	this.commandsESC[DIGIT_ONE] = this.charsetSpecial;
-	this.commandsESC[DIGIT_ONE] = this.charsetAlt;
-	this.commandsESC[DIGIT_TWO] = this.charsetAltSpecial;
-	this.commandsESC[DIGIT_SEVEN] = this.cursorSave;
+	//this.commandsESC[DIGIT_EIGHT] = this.dec8; //this.cursorRestore
+	//this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_A] = this.charsetUK;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_B] = this.charsetUS;
+	//this.commandsESC[DIGIT_ONE] = this.charsetSpecial;
+	//this.commandsESC[DIGIT_ONE] = this.charsetAlt;
+	//this.commandsESC[DIGIT_TWO] = this.charsetAltSpecial;
+	//this.commandsESC[DIGIT_SEVEN] = this.cursorSave;
 
-	this.commandsESC[LATIN_CAPITAL_LETTER_D] = this.index;
-	this.commandsESC[LATIN_CAPITAL_LETTER_M] = this.reverseIndex;
-	this.commandsESC[LATIN_CAPITAL_LETTER_E] = this.nextLine;
-	this.commandsESC[LATIN_CAPITAL_LETTER_H] = this.setTabStop;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_D] = this.index;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_M] = this.reverseIndex;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_E] = this.nextLine;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_H] = this.setTabStop;
 
-	this.commandsCSI[LATIN_SMALL_LETTER_H] = this.modeSet;
-	this.commandsCSI[LATIN_SMALL_LETTER_L] = this.modeReset;
+	//this.commandsCSI[LATIN_SMALL_LETTER_H] = this.modeSet;
+	//this.commandsCSI[LATIN_SMALL_LETTER_L] = this.modeReset;
 
-	this.commandsCSI[LATIN_SMALL_LETTER_C] = this.deviceAttributes;
-	this.commandsCSI[LATIN_SMALL_LETTER_M] = this.setGraphicsMode;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine;	
-	this.commandsCSI[LATIN_SMALL_LETTER_R] = this.scrollScreen;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_H] = this.cursorPosition;
-	this.commandsCSI[LATIN_SMALL_LETTER_F] = this.cursorPosition;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp;	
-	this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown;	
-	this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward;	
-	this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward;
-	this.commandsCSI[LATIN_SMALL_LETTER_D] = this.cursorFromTop;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_G] = this.cursorFromLeft;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_P] = this.deleteChar;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_X] = this.eraseChar;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_L] = this.insertLine;
-	this.commandsCSI[LATIN_SMALL_LETTER_N] = this.deviceStatusReport;
-	this.commandsCSI[LATIN_SMALL_LETTER_P] = this.softreset;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_M] = this.deleteLines;
-	this.commandsCSI[LATIN_SMALL_LETTER_G] = this.clearTabStops;*/
+	//this.commandsCSI[LATIN_SMALL_LETTER_C] = this.deviceAttributes;
+	//this.commandsCSI[LATIN_SMALL_LETTER_M] = this.setGraphicsMode;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine;
+	//this.commandsCSI[LATIN_SMALL_LETTER_R] = this.scrollScreen;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_H] = this.cursorPosition;
+	//this.commandsCSI[LATIN_SMALL_LETTER_F] = this.cursorPosition;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward;
+	//this.commandsCSI[LATIN_SMALL_LETTER_D] = this.cursorFromTop;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_G] = this.cursorFromLeft;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_P] = this.deleteChar;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_X] = this.eraseChar;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_L] = this.insertLine;
+	//this.commandsCSI[LATIN_SMALL_LETTER_N] = this.deviceStatusReport;
+	//this.commandsCSI[LATIN_SMALL_LETTER_P] = this.softreset;
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_M] = this.deleteLines;
+	//this.commandsCSI[LATIN_SMALL_LETTER_G] = this.clearTabStops;
 	
 };
 
