@@ -150,13 +150,12 @@ TERM.AnsiViewer = function (control){
 
 	this.moveBackward = function(val) {
 		var movements = val;
-
 		while( movements > 0 ) {
 			this.cursor.moveBackward(1);
 			movements--;
 		}
 	};
-
+ 
 	this.moveDown = function(val) {
 		if(this.cursor.y >= this.cursor.lineHeight*(botMargin-1)) {
 			this.scrollUp(1);
@@ -294,14 +293,14 @@ TERM.AnsiViewer = function (control){
 		this.control.modes['reverse'] = false
 		this.control.modes['origin'] = 0
 		this.control.modes['insert'] = false
-		this.parser.escapeCommands._bold = false;
-		this.parser.escapeCommands._reverse = false;
-		this.parser.escapeCommands._currentForegroundColor = this.parser.escapeCommands._defaultForgroundColor;
-		this.parser.escapeCommands._currentBackgroundColor = this.parser.escapeCommands._defaultBackgroundColor;
-		this.foregroundColorChanged(this.parser.escapeCommands._currentForegroundColor);
-		this.backgroundColorChanged(this.parser.escapeCommands._currentBackgroundColor);
+		//this.parser.escapeCommands._bold = false;
+		//this.parser.escapeCommands._reverse = false;
+		//this.parser.escapeCommands._currentForegroundColor = this.parser.escapeCommands._defaultForgroundColor;
+		//this.parser.escapeCommands._currentBackgroundColor = this.parser.escapeCommands._defaultBackgroundColor;
+		//this.foregroundColorChanged(this.parser.escapeCommands._currentForegroundColor);
+		//this.backgroundColorChanged(this.parser.escapeCommands._currentBackgroundColor);
 		this.underline = false;
-		this.parser.escapeCommands.cursorSave()
+		//this.parser.escapeCommands.cursorSave()
 		this.tabs = [];
 		this.eraseScreen();
 		this.home();

@@ -13,7 +13,7 @@ uninstall:
 kill:
 	novacom run file://usr/bin/luna-send -- -n 1 palm://us.ryanhope.wterm.tty.service/__quit '{}'
 
-install: kill uninstall package
+install: package
 	palm-install ${APPID}_*.ipk
 	palm-launch ${APPID}
 

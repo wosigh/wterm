@@ -199,34 +199,6 @@
 		}
 	};
 	
-	this.cursorUp = function(params) {
-		var value = parseInt(params[0]) || 1
-		viewer.cursor.position.y -= viewer.cursor.lineHeight*value
-		if (viewer.cursor.position.y < (viewer.topMargin-1)*viewer.cursor.lineHeight)
-			viewer.cursor.position.y = (viewer.topMargin-1)*viewer.cursor.lineHeight
-	};
-	
-	this.cursorDown = function(params) {
-		var value = parseInt(params[0]) || 1
-		viewer.cursor.position.y += viewer.cursor.lineHeight*value
-		if (viewer.cursor.position.y > (viewer.botMargin-1)*viewer.cursor.lineHeight)
-			viewer.cursor.position.y = (viewer.botMargin-1)*viewer.cursor.lineHeight
-	};
-	
-	this.cursorForward = function(params) {
-		var value = parseInt(params[0]) || 1
-		viewer.cursor.position.x += viewer.cursor.columnWidth*value
-		if (viewer.cursor.position.x > viewer.cursor.columnWidth*(viewer.cursor.maxColumnWidth-1))
-			viewer.cursor.position.x = viewer.cursor.columnWidth*(viewer.cursor.maxColumnWidth-1)
-	};
-	
-	this.cursorBackward = function(params) {
-		var value = parseInt(params[0]) || 1
-		viewer.cursor.position.x -= viewer.cursor.columnWidth*value
-		if (viewer.cursor.position.x < 0)
-			viewer.cursor.position.x = 0
-	};
-	
 	// Set Graphic Mode functions
 	var _bold = false;
 	var _reverse = false;

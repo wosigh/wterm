@@ -63,6 +63,7 @@ enyo.kind({
 			if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 			} else {
+				enyo.log(inResponse)
 				if (this.viewer.cursor.visible)
 					this.viewer.cursorHide()
 				switch (inResponse.type) {
@@ -72,8 +73,38 @@ enyo.kind({
 					case 'carriageReturn':
 						this.viewer.carriageReturn()
 						break;
-					case 'moveDown':
+					case 'cursorUp':
+						this.viewer.moveUp(inResponse.params)
+						break;
+					case 'cursorDown':
 						this.viewer.moveDown(inResponse.params)
+						break;
+					case 'cursorBackward':
+						this.viewer.moveBackward(inResponse.params)
+						break;
+					case 'cursorForward':
+						this.viewer.moveForward(inResponse.params)
+						break;
+					case 'eraseStartOfLine':
+						this.viewer.eraseStartOfLine();
+						break;
+					case 'eraseLine':
+						this.viewer.eraseLine();
+						break;
+					case 'eraseEndOfLine':
+						this.viewer.eraseEndOfLine();
+						break;
+					case 'eraseUp':
+						this.viewer.eraseUp();
+						break;
+					case 'eraseScreen':
+						this.viewer.eraseScreen();
+						break;
+					case 'eraseDown':
+						this.viewer.eraseDown();
+						break;
+					case 'reset':
+						this.viewer.reset();
 						break;
 				}
 				if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
@@ -101,6 +132,7 @@ enyo.kind({
 	},
 
 	writeString: function(str) {
+		enyo.log({id: this.tty_id, data: str})
 		this.$.ttyrun.call({id: this.tty_id, data: str})
 	},
 	

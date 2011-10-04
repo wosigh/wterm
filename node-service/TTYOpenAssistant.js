@@ -274,7 +274,7 @@ TTYOpenAssistant.prototype.setup = function() {
 	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 	
 	//this.commandsESC[DIGIT_EIGHT] = this.dec8; //this.cursorRestore
-	//this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset;
+	this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset;
 	//this.commandsESC[LATIN_CAPITAL_LETTER_A] = this.charsetUK;
 	//this.commandsESC[LATIN_CAPITAL_LETTER_B] = this.charsetUS;
 	//this.commandsESC[DIGIT_ONE] = this.charsetSpecial;
@@ -292,15 +292,15 @@ TTYOpenAssistant.prototype.setup = function() {
 
 	//this.commandsCSI[LATIN_SMALL_LETTER_C] = this.deviceAttributes;
 	//this.commandsCSI[LATIN_SMALL_LETTER_M] = this.setGraphicsMode;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine;
 	//this.commandsCSI[LATIN_SMALL_LETTER_R] = this.scrollScreen;
 	//this.commandsCSI[LATIN_CAPITAL_LETTER_H] = this.cursorPosition;
 	//this.commandsCSI[LATIN_SMALL_LETTER_F] = this.cursorPosition;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward;
+	this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward;
 	//this.commandsCSI[LATIN_SMALL_LETTER_D] = this.cursorFromTop;
 	//this.commandsCSI[LATIN_CAPITAL_LETTER_G] = this.cursorFromLeft;
 	//this.commandsCSI[LATIN_CAPITAL_LETTER_P] = this.deleteChar;
@@ -318,19 +318,69 @@ TTYOpenAssistant.prototype.send = function(subscription, type, params) {
 	subscription.get().result = {type: type, params: params}
 };
 
-TTYOpenAssistant.prototype.executeESC = function(ic, fc) {
+TTYOpenAssistant.prototype.executeESC = function(subscription, ic, fc) {
 	if (this.commandsESC[fc] != undefined)
-		this.commandsESC[fc](ic);
+		this.commandsESC[fc](subscription, ic);
 	else
 		console.error('ESC', ic, fc)
 };
 
-TTYOpenAssistant.prototype.executeCSI = function(cmd, paramsRaw) {
+TTYOpenAssistant.prototype.executeCSI = function(subscription, cmd, paramsRaw) {
 	var params = paramsRaw.split(';')
 	if (this.commandsCSI[cmd] != undefined)
-		this.commandsCSI[cmd](params);
+		this.commandsCSI[cmd](subscription, params);
 	else
 		console.error('CSI', cmd, params)
+};
+
+TTYOpenAssistant.prototype.eraseDisplay = function(params) {
+	if (params[0] == '1')
+		this.send(subscription,'eraseUp', null)
+	else if (params[0] == '2')
+		this.send(subscription,'eraseScreen', null)
+	else
+		this.send(subscription,'eraseDown', null)
+};
+
+TTYOpenAssistant.prototype.eraseLine = function(params) {
+	if (params[0] == '1')
+		this.send(subscription,'eraseStartOfLine', null)
+	else if (params[0] == '2')
+		this.send(subscription,'eraseLine', null)
+	else
+		this.send(subscription,'eraseEndOfLine', null)
+};
+
+TTYOpenAssistant.prototype.cursorPosition = function(params) {
+	if (params[0]=='') {
+		this.send(subscription,'cursorPosition', [1,1])
+	} else {
+		this.send(subscription,'cursorPosition', [parseInt(params[0]),parseInt(params[1])])
+	}
+};
+
+TTYOpenAssistant.prototype.reset = function(subscription, params) {
+	this.send(subscription,'reset', null)
+};
+
+TTYOpenAssistant.prototype.cursorUp = function(subscription, params) {
+	this.send(subscription,'cursorUp', parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.cursorDown = function(subscription, params) {
+	this.send(subscription,'cursorDown', parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.cursorForward = function(subscription, params) {
+	this.send(subscription,'cursorForward', parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.cursorBackward = function(subscription, params) {
+	this.send(subscription,'cursorBackward', parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.setGraphicsMode = function(subscription, params) {
+	console.log("SET GRAHPICS MODE", params)
 };
 
 TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
@@ -351,19 +401,20 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 					else {
 						this.bufferEscapeCommand = 2;
 						if (buffer[i]>=DIGIT_ZERO && buffer[i]<=TILDE) {
-							this.escapeCommands.executeESC(null,buffer[i]);
+							this.executeESC(subscription,null,buffer[i]);
 							this.bufferEscapeCommand = 0;
 						}
 					}
 				} else if(this.bufferEscapeCommand == 2) {
-					if (buffer[i]>=DIGIT_ZERO && b<=TILDE) {
+					if (buffer[i]>=DIGIT_ZERO && buffer[i]<=TILDE) {
 						if (i-this.escapeCommandStart+1 == 3)
-							this.escapeCommands.executeESC(buffer[i-1],buffer[i])
+							this.executeESC(subscription,buffer[i-1],buffer[i])
 						this.bufferEscapeCommand = 0;
 					}
 				} else if(this.bufferEscapeCommand == 3) {
 					if (buffer[i]>=COMMERCIAL_AT && buffer[i]<=TILDE) {
-						//this.escapeCommands.executeCSI(buffer[i],buffer.toString(start=this.escapeCommandStart+2,end=i-1));
+						console.log("CSI Command",this.escapeCommandStart+2, i)
+						this.executeCSI(subscription,buffer[i],buffer.toString('ascii',start=this.escapeCommandStart+2,end=i));
 						this.bufferEscapeCommand = 0;
 					}
 				} else if(buffer[i] >= SPACE) {
@@ -377,13 +428,13 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 					}
 					switch(buffer[i]) {
 						case BACKSPACE:
-							this.send(subscription,'moveBackward',1)
+							this.send(subscription,'cursorBackward',1)
 							break;
 	
 						case VERTICAL_TABULATION:
 						case FORM_FEED:
 						case LINE_FEED:
-							this.send(subscription,'moveDown',1)
+							this.send(subscription,'cursorDown',1)
 							/*if (viewer.control.modes['newline'])
 								this.send('carriageReturn',null)*/
 							break;
@@ -410,8 +461,8 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 							}
 							if (newX == -1)
 								newX = (viewer.cursor.maxColumnWidth-1)*viewer.cursor.columnWidth
-							viewer.cursor.x = newX
-							break;*/
+							viewer.cursor.x = newX*/
+							break;
 	
 						default:
 							console.warn('CTRL',buffer[i]);
@@ -466,4 +517,4 @@ TTYOpenAssistant.prototype.opencmd=function(cmd,args,callback) {
 		callback(streams);
 	return streams;
 	
-}
+};
