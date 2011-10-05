@@ -42,6 +42,25 @@ const CYAN_BOLD = "#54fcfc";
 const WHITE_NORMAL = "#a8a8a8";
 const WHITE_BOLD = "#fcfcfc";
 
+/*
+// XTERM STYLE
+const BLACK_NORMAL = "#000000";
+const BLACK_BOLD = "#7F7F7F";
+const RED_NORMAL = "#CD0000";
+const RED_BOLD = "#FF0000";
+const GREEN_NORMAL = "#00CD00";
+const GREEN_BOLD = "#00FF00";
+const YELLOW_NORMAL = "#CDCD00";
+const YELLOW_BOLD = "#FFFF00";
+const BLUE_NORMAL = "#0000EE";
+const BLUE_BOLD = "#5C5CFF";
+const MAGENTA_NORMAL = "#CD00CD";
+const MAGENTA_BOLD = "#FF00FF";
+const CYAN_NORMAL = "#00CDCD";
+const CYAN_BOLD = "#00FFFF";
+const WHITE_NORMAL = "#E5E5E5";
+const WHITE_BOLD = "#FFFFFF";*/
+
 /* The namespace. Everything comes from within the namespace. */
 var jsTerm = new (function () {
     /* A font description. */

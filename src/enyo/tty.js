@@ -1,3 +1,28 @@
+var _CURSOR_FROM_TOP = 0;
+var _CURSOR_FROM_LEFT = 1;
+var _TEXT = 2;
+var _CARRIAGE_RETURN = 4;
+var _CURSOR_POSITION = 5;
+var _CURSOR_UP = 6;
+var _CURSOR_DOWN = 7;
+var _CURSOR_BACKWARD = 8;
+var _CURSOR_FORWARD = 9;
+var _ERASE_START_OF_LINE = 10;
+var _ERASE_LINE = 11;
+var _ERASE_END_OF_LINE = 12;
+var _ERASE_UP = 13;
+var _ERASE_SCREEN = 14;
+var _ERASE_DOWN = 15;
+var _RESET = 16;
+var _GRAPHICS_MODE_BOLD = 17;
+var _GRAPHICS_MODE_BLINK = 18;
+var _GRAPHICS_MODE_UNDERLINE = 19;
+var _GRAPHICS_MODE_REVERSE = 20;
+var _GRAPHICS_MODE_FG = 21;
+var _GRAPHICS_MODE_BG = 22;
+var _SHOW_CURSOR = 23;
+var _HIDE_CURSOR = 24;
+
 enyo.kind({
 	
 	name: "tty",
@@ -10,6 +35,9 @@ enyo.kind({
 	buffer: '',
 
 	vkb: null,
+	
+	_boldColors: [BLACK_BOLD, RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, MAGENTA_BOLD, CYAN_BOLD, WHITE_BOLD],
+	_normalColors: [BLACK_NORMAL, RED_NORMAL, GREEN_NORMAL, YELLOW_NORMAL, BLUE_NORMAL, MAGENTA_NORMAL, CYAN_NORMAL, WHITE_NORMAL],
 
 	published: {
 		modes: {
@@ -63,52 +91,104 @@ enyo.kind({
 			if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
 			} else {
-				enyo.log(inResponse)
-				if (this.viewer.cursor.visible)
-					this.viewer.cursorHide()
 				switch (inResponse.type) {
-					case 'text':
+					case _HIDE_CURSOR:
+						if (this.viewer.cursor.visible)
+							this.viewer.cursorHide()
+						break;
+					case _SHOW_CURSOR:
+						if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
+							this.viewer.cursorShow()
+						break;
+					case _CURSOR_FROM_TOP:
+						this.viewer.cursor.position.y = viewer.cursor.lineHeight*inResponse.params;
+						break
+					case _CURSOR_FROM_LEFT:
+						this.viewer.cursor.position.x = viewer.cursor.lineHeight*inResponse.params;
+						break;
+					case _TEXT:
 						this.viewer.writeText(inResponse.params)
 						break;
-					case 'carriageReturn':
+					case _CARRIAGE_RETURN:
 						this.viewer.carriageReturn()
 						break;
-					case 'cursorUp':
+					case _CURSOR_POSITION:
+						this.viewer.reposition(inResponse.params[1]-1,inResponse.params[0]-1)
+						break;
+					case _CURSOR_UP:
 						this.viewer.moveUp(inResponse.params)
 						break;
-					case 'cursorDown':
+					case _CURSOR_DOWN:
 						this.viewer.moveDown(inResponse.params)
 						break;
-					case 'cursorBackward':
+					case _CURSOR_BACKWARD:
 						this.viewer.moveBackward(inResponse.params)
 						break;
-					case 'cursorForward':
+					case _CURSOR_FORWARD:
 						this.viewer.moveForward(inResponse.params)
 						break;
-					case 'eraseStartOfLine':
+					case _ERASE_START_OF_LINE:
 						this.viewer.eraseStartOfLine();
 						break;
-					case 'eraseLine':
+					case _ERASE_LINE:
 						this.viewer.eraseLine();
 						break;
-					case 'eraseEndOfLine':
+					case _ERASE_END_OF_LINE:
 						this.viewer.eraseEndOfLine();
 						break;
-					case 'eraseUp':
+					case _ERASE_UP:
 						this.viewer.eraseUp();
 						break;
-					case 'eraseScreen':
+					case _ERASE_SCREEN:
 						this.viewer.eraseScreen();
 						break;
-					case 'eraseDown':
+					case _ERASE_DOWN:
 						this.viewer.eraseDown();
 						break;
-					case 'reset':
+					case _RESET:
 						this.viewer.reset();
 						break;
+					case _GRAPHICS_MODE_BOLD:
+						this.viewer.cursor.bold = inResponse.params
+						if (this.viewer.cursor.bold) {
+							for (var j=0; j<this._normalColors.length; j++) {
+								if (this.viewer.cursor.foregroundColor == this._normalColors[j])
+									this.viewer.cursor.foregroundColor = this._boldColors[j];
+							}
+						} else {
+							for (var j=0; j<this._normalColors.length; j++) {
+								if (this.viewer.cursor.foregroundColor == this._boldColors[j])
+									this.viewer.cursor.foregroundColor = this._normalColors[j];
+							}
+						}
+						break;
+					case _GRAPHICS_MODE_REVERSE:
+						this.viewer.cursor.reverse = inResponse.params
+						break;
+					case _GRAPHICS_MODE_UNDERLINE:
+						this.viewer.cursor.underline = inResponse.params
+						break;
+					case _GRAPHICS_MODE_BLINK:
+						break;
+					case _GRAPHICS_MODE_FG:
+						if (inResponse.params==-1)
+							this.viewer.cursor.foregroundColor = this.viewer.cursor.defaultForegroundColor
+						else
+							if (this.viewer.cursor.reverse)
+								this.viewer.cursor.backgroundColor = this._normalColors[inResponse.params];
+							else
+								this.viewer.cursor.foregroundColor = (this.viewer.cursor.bold) ? this._boldColors[inResponse.params] : this._normalColors[inResponse.params];									
+						break;
+					case _GRAPHICS_MODE_BG:
+						if (inResponse.params==-1)
+							this.viewer.cursor.backgroundColor = this.viewer.cursor.defaultBackgroundColor
+						else
+							if (this.viewer.cursor.reverse)
+								this.viewer.cursor.foregroundColor = (this.viewer.cursor.bold) ? this._boldColors[inResponse.params] : this._normalColors[inResponse.params];
+							else
+								this.viewer.cursor.backgroundColor = this._normalColors[inResponse.params]; 
+						break;
 				}
-				if (this.viewer.cursor.enabled && !this.viewer.cursor.visible)
-					this.viewer.cursorShow()
 			}
 		} else {
 			this.error(inResponse.errorCode, inResponse.errorText)
@@ -132,7 +212,6 @@ enyo.kind({
 	},
 
 	writeString: function(str) {
-		enyo.log({id: this.tty_id, data: str})
 		this.$.ttyrun.call({id: this.tty_id, data: str})
 	},
 	

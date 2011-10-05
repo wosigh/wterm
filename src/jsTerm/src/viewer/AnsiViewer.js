@@ -8,8 +8,6 @@ TERM.AnsiViewer = function (control){
 	this.cursor = new TERM.Cursor();
 	//this.parser = new TERM.AnsiParser(this);
 
-	this.underline = false;
-
 	this.canvas = document.getElementById('canvas');
 
 	var fontmap = this.control.fontmap;
@@ -81,11 +79,11 @@ TERM.AnsiViewer = function (control){
 		}
 		return 0;
 	};
-
+	
 	this.drawCharacter = function(character) {
 		
 		this.draw(character);
-		if (this.underline)
+		if (this.cursor.underline)
 			this.drawUnderline();
 		this.moveForward(1);
 
@@ -293,13 +291,12 @@ TERM.AnsiViewer = function (control){
 		this.control.modes['reverse'] = false
 		this.control.modes['origin'] = 0
 		this.control.modes['insert'] = false
-		//this.parser.escapeCommands._bold = false;
-		//this.parser.escapeCommands._reverse = false;
-		//this.parser.escapeCommands._currentForegroundColor = this.parser.escapeCommands._defaultForgroundColor;
-		//this.parser.escapeCommands._currentBackgroundColor = this.parser.escapeCommands._defaultBackgroundColor;
-		//this.foregroundColorChanged(this.parser.escapeCommands._currentForegroundColor);
-		//this.backgroundColorChanged(this.parser.escapeCommands._currentBackgroundColor);
-		this.underline = false;
+		this.cursor.underline = false;
+		this.cursor.bold = false;
+		this.cursor.reverse = false;
+		this.cursor.blink = false;
+		this.cursor.foregroundColor = this.cursor.defaultForegroundColor
+		this.cursor.backgroundColor = this.cursor.defaultBackgroundColor
 		//this.parser.escapeCommands.cursorSave()
 		this.tabs = [];
 		this.eraseScreen();

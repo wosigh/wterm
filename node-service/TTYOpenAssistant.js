@@ -255,6 +255,31 @@ var SUPERSCRIPT_TWO = 253;
 var BLACK_SQUARE = 254;
 var NO_BREAK_SPACE = 255;
 
+var _CURSOR_FROM_TOP = 0;
+var _CURSOR_FROM_LEFT = 1;
+var _TEXT = 2;
+var _CARRIAGE_RETURN = 4;
+var _CURSOR_POSITION = 5;
+var _CURSOR_UP = 6;
+var _CURSOR_DOWN = 7;
+var _CURSOR_BACKWARD = 8;
+var _CURSOR_FORWARD = 9;
+var _ERASE_START_OF_LINE = 10;
+var _ERASE_LINE = 11;
+var _ERASE_END_OF_LINE = 12;
+var _ERASE_UP = 13;
+var _ERASE_SCREEN = 14;
+var _ERASE_DOWN = 15;
+var _RESET = 16;
+var _GRAPHICS_MODE_BOLD = 17;
+var _GRAPHICS_MODE_BLINK = 18;
+var _GRAPHICS_MODE_UNDERLINE = 19;
+var _GRAPHICS_MODE_REVERSE = 20;
+var _GRAPHICS_MODE_FG = 21;
+var _GRAPHICS_MODE_BG = 22;
+var _SHOW_CURSOR = 23;
+var _HIDE_CURSOR = 24;
+
 var TTYOpenAssistant = function() {
 	
 	this.commandsESC = [];
@@ -267,129 +292,205 @@ var TTYOpenAssistant = function() {
 
 TTYOpenAssistant.prototype.setup = function() {
 	
-	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-	console.log("               TTY OPEN ASSISTANT OPENING")
-	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-	console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-	
-	//this.commandsESC[DIGIT_EIGHT] = this.dec8; //this.cursorRestore
-	this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset;
-	//this.commandsESC[LATIN_CAPITAL_LETTER_A] = this.charsetUK;
-	//this.commandsESC[LATIN_CAPITAL_LETTER_B] = this.charsetUS;
-	//this.commandsESC[DIGIT_ONE] = this.charsetSpecial;
-	//this.commandsESC[DIGIT_ONE] = this.charsetAlt;
-	//this.commandsESC[DIGIT_TWO] = this.charsetAltSpecial;
-	//this.commandsESC[DIGIT_SEVEN] = this.cursorSave;
+	//this.commandsESC[DIGIT_EIGHT] = this.dec8.bind(this); //this.cursorRestore
+	this.commandsESC[LATIN_SMALL_LETTER_C] = this.reset.bind(this);
+	//this.commandsESC[LATIN_CAPITAL_LETTER_A] = this.charsetUK.bind(this);
+	//this.commandsESC[LATIN_CAPITAL_LETTER_B] = this.charsetUS.bind(this);
+	//this.commandsESC[DIGIT_ONE] = this.charsetSpecial.bind(this);
+	//this.commandsESC[DIGIT_ONE] = this.charsetAlt.bind(this);
+	//this.commandsESC[DIGIT_TWO] = this.charsetAltSpecial.bind(this);
+	//this.commandsESC[DIGIT_SEVEN] = this.cursorSave.bind(this);
 
-	//this.commandsESC[LATIN_CAPITAL_LETTER_D] = this.index;
-	//this.commandsESC[LATIN_CAPITAL_LETTER_M] = this.reverseIndex;
-	//this.commandsESC[LATIN_CAPITAL_LETTER_E] = this.nextLine;
-	//this.commandsESC[LATIN_CAPITAL_LETTER_H] = this.setTabStop;
+	//this.commandsESC[LATIN_CAPITAL_LETTER_D] = this.index.bind(this);
+	//this.commandsESC[LATIN_CAPITAL_LETTER_M] = this.reverseIndex.bind(this);
+	//this.commandsESC[LATIN_CAPITAL_LETTER_E] = this.nextLine.bind(this);
+	//this.commandsESC[LATIN_CAPITAL_LETTER_H] = this.setTabStop.bind(this);
 
-	//this.commandsCSI[LATIN_SMALL_LETTER_H] = this.modeSet;
-	//this.commandsCSI[LATIN_SMALL_LETTER_L] = this.modeReset;
+	//this.commandsCSI[LATIN_SMALL_LETTER_H] = this.modeSet.bind(this);
+	//this.commandsCSI[LATIN_SMALL_LETTER_L] = this.modeReset.bind(this);
 
-	//this.commandsCSI[LATIN_SMALL_LETTER_C] = this.deviceAttributes;
-	//this.commandsCSI[LATIN_SMALL_LETTER_M] = this.setGraphicsMode;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine;
-	//this.commandsCSI[LATIN_SMALL_LETTER_R] = this.scrollScreen;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_H] = this.cursorPosition;
-	//this.commandsCSI[LATIN_SMALL_LETTER_F] = this.cursorPosition;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward;
-	this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward;
-	//this.commandsCSI[LATIN_SMALL_LETTER_D] = this.cursorFromTop;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_G] = this.cursorFromLeft;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_P] = this.deleteChar;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_X] = this.eraseChar;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_L] = this.insertLine;
-	//this.commandsCSI[LATIN_SMALL_LETTER_N] = this.deviceStatusReport;
-	//this.commandsCSI[LATIN_SMALL_LETTER_P] = this.softreset;
-	//this.commandsCSI[LATIN_CAPITAL_LETTER_M] = this.deleteLines;
-	//this.commandsCSI[LATIN_SMALL_LETTER_G] = this.clearTabStops;
+	//this.commandsCSI[LATIN_SMALL_LETTER_C] = this.deviceAttributes.bind(this);
+	this.commandsCSI[LATIN_SMALL_LETTER_M] = this.setGraphicsMode.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_J] = this.eraseDisplay.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_K] = this.eraseLine.bind(this);
+	//this.commandsCSI[LATIN_SMALL_LETTER_R] = this.scrollScreen.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_H] = this.cursorPosition.bind(this);
+	this.commandsCSI[LATIN_SMALL_LETTER_F] = this.cursorPosition.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_A] = this.cursorUp.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_B] = this.cursorDown.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_C] = this.cursorForward.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_D] = this.cursorBackward.bind(this);
+	this.commandsCSI[LATIN_SMALL_LETTER_D] = this.cursorFromTop.bind(this);
+	this.commandsCSI[LATIN_CAPITAL_LETTER_G] = this.cursorFromLeft.bind(this);
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_P] = this.deleteChar.bind(this);
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_X] = this.eraseChar.bind(this);
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_L] = this.insertLine.bind(this);
+	this.commandsCSI[LATIN_SMALL_LETTER_N] = this.deviceStatusReport.bind(this);
+	//this.commandsCSI[LATIN_SMALL_LETTER_P] = this.softreset.bind(this);
+	//this.commandsCSI[LATIN_CAPITAL_LETTER_M] = this.deleteLines.bind(this);
+	//this.commandsCSI[LATIN_SMALL_LETTER_G] = this.clearTabStops.bind(this);
 	
 };
 
-TTYOpenAssistant.prototype.send = function(subscription, type, params) {
-	console.log('Send via Subscription', type)
-	subscription.get().result = {type: type, params: params}
+TTYOpenAssistant.prototype.send = function(id, type, params) {
+	ttys[id][1].get().result = {type: type, params: params}
 };
 
-TTYOpenAssistant.prototype.executeESC = function(subscription, ic, fc) {
+TTYOpenAssistant.prototype.executeESC = function(id, ic, fc) {
 	if (this.commandsESC[fc] != undefined)
-		this.commandsESC[fc](subscription, ic);
+		this.commandsESC[fc](id, ic);
 	else
 		console.error('ESC', ic, fc)
 };
 
-TTYOpenAssistant.prototype.executeCSI = function(subscription, cmd, paramsRaw) {
+TTYOpenAssistant.prototype.executeCSI = function(id, cmd, paramsRaw) {
 	var params = paramsRaw.split(';')
 	if (this.commandsCSI[cmd] != undefined)
-		this.commandsCSI[cmd](subscription, params);
+		this.commandsCSI[cmd](id, params);
 	else
 		console.error('CSI', cmd, params)
 };
 
-TTYOpenAssistant.prototype.eraseDisplay = function(params) {
-	if (params[0] == '1')
-		this.send(subscription,'eraseUp', null)
-	else if (params[0] == '2')
-		this.send(subscription,'eraseScreen', null)
-	else
-		this.send(subscription,'eraseDown', null)
-};
-
-TTYOpenAssistant.prototype.eraseLine = function(params) {
-	if (params[0] == '1')
-		this.send(subscription,'eraseStartOfLine', null)
-	else if (params[0] == '2')
-		this.send(subscription,'eraseLine', null)
-	else
-		this.send(subscription,'eraseEndOfLine', null)
-};
-
-TTYOpenAssistant.prototype.cursorPosition = function(params) {
-	if (params[0]=='') {
-		this.send(subscription,'cursorPosition', [1,1])
-	} else {
-		this.send(subscription,'cursorPosition', [parseInt(params[0]),parseInt(params[1])])
+TTYOpenAssistant.prototype.deviceStatusReport = function(params) {
+	switch (params[0]) {
+		case '5':
+			viewer.control.writeString('\033[0n')
+			break;
+		case '6':
+			var col = "" + viewer.cursor.x * viewer.cursor.columnWidth;
+			var row = "" + viewer.cursor.y * viewer.cursor.lineHeight;
+			viewer.control.writeString('\033['+row+';'+col+'R')
+			break;
 	}
 };
 
-TTYOpenAssistant.prototype.reset = function(subscription, params) {
-	this.send(subscription,'reset', null)
+TTYOpenAssistant.prototype.cursorFromTop = function(id, params) {
+	this.send(id, _CURSOR_FROM_TOP, parseInt(params[0]))
 };
 
-TTYOpenAssistant.prototype.cursorUp = function(subscription, params) {
-	this.send(subscription,'cursorUp', parseInt(params[0]) || 1)
+TTYOpenAssistant.prototype.cursorFromLeft = function(id, params) {
+	this.send(id, _CURSOR_FROM_LEFT, parseInt(params[0]))
 };
 
-TTYOpenAssistant.prototype.cursorDown = function(subscription, params) {
-	this.send(subscription,'cursorDown', parseInt(params[0]) || 1)
+TTYOpenAssistant.prototype.cursorPosition = function(id, params) {
+	if (params[0]=='') {
+		this.send(id, _CURSOR_POSITION, [1,1])
+	} else {
+		this.send(id, _CURSOR_POSITION, [parseInt(params[0]),parseInt(params[1])])
+	}
 };
 
-TTYOpenAssistant.prototype.cursorForward = function(subscription, params) {
-	this.send(subscription,'cursorForward', parseInt(params[0]) || 1)
+TTYOpenAssistant.prototype.reset = function(id, params) {
+	this.send(id, _RESET, null)
 };
 
-TTYOpenAssistant.prototype.cursorBackward = function(subscription, params) {
-	this.send(subscription,'cursorBackward', parseInt(params[0]) || 1)
+TTYOpenAssistant.prototype.cursorUp = function(id, params) {
+	this.send(id, _CURSOR_UP, parseInt(params[0]) || 1)
 };
 
-TTYOpenAssistant.prototype.setGraphicsMode = function(subscription, params) {
-	console.log("SET GRAHPICS MODE", params)
+TTYOpenAssistant.prototype.cursorDown = function(id, params) {
+	this.send(id, _CURSOR_DOWN, parseInt(params[0]) || 1)
 };
 
-TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
+TTYOpenAssistant.prototype.cursorForward = function(id, params) {
+	this.send(id, _CURSOR_FORWARD, parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.cursorBackward = function(id, params) {
+	this.send(id, _CURSOR_BACKWARD, parseInt(params[0]) || 1)
+};
+
+TTYOpenAssistant.prototype.setGraphicsMode = function(id, params) {
+		
+	for(var i in params){
+		
+		var param = (params[i]=='') ? 0 : parseInt(params[i]);
+
+		switch( param ) {
+
+			/*  Reset */
+			case 0:
+				this.send(id, _GRAPHICS_MODE_BOLD, false)
+				this.send(id, _GRAPHICS_MODE_REVERSE, false)
+				this.send(id, _GRAPHICS_MODE_UNDERLINE, false)
+				this.send(id, _GRAPHICS_MODE_BLINK, false)
+				this.send(id, _GRAPHICS_MODE_FG, -1)
+				this.send(id, _GRAPHICS_MODE_BG, -1)
+				break;
+			
+			/*  Bold ON */
+			case 1:
+				this.send(id, _GRAPHICS_MODE_BOLD, true)
+				break;
+			
+			/* Dim */
+			case 2:
+				this.send(id, _GRAPHICS_MODE_BOLD, false)
+				break;
+			
+			/* Set foreground color */
+			case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: 
+				this.send(id, _GRAPHICS_MODE_FG, param - 30)
+				break;
+
+			case 4:
+				this.send(id, _GRAPHICS_MODE_UNDERLINE, true)
+				break;
+			
+			/* Set background color */
+			case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47:
+				this.send(id, _GRAPHICS_MODE_BG, param - 40)
+				break;
+			
+			/* Blink ON */
+			case 5:
+				this.send(id, _GRAPHICS_MODE_BLINK, true)
+				break;
+			
+			/* Reverse ON */
+			case 7:
+				this.send(id, _GRAPHICS_MODE_REVERSE, true)
+				break;
+			
+			/* Concealed ON */
+			case 8:
+				break;
+			
+			/* Reset to normal? */
+			case 9:
+				break;
+		}
+
+	}
+	
+};
+
+TTYOpenAssistant.prototype.eraseLine = function(id, params) {
+	if (params[0] == '1')
+		this.send(id, _ERASE_START_OF_LINE, null)
+	else if (params[0] == '2')
+		this.send(id, _ERASE_LINE, null)
+	else if (params[0] == '' || params[0] == '0')
+		this.send(id, _ERASE_END_OF_LINE, null)
+};
+
+TTYOpenAssistant.prototype.eraseDisplay = function(id, params) {
+	if (params[0] == '1')
+		this.send(id, _ERASE_UP, null)
+	else if (params[0] == '2')
+		this.send(id, _ERASE_SCREEN, null)
+	else if (params[0] == '' || params[0] == '0')
+		this.send(id, _ERASE_DOWN, null)
+};
+
+TTYOpenAssistant.prototype.parse = function (id, buffer) {
 	
 	try {
+		this.send(id, _HIDE_CURSOR, null)
 		for (var i=0; i<buffer.length; i++) {
 			if(buffer[i] == ESCAPE) {
 				if (this.textBuffer != null) {
-					this.send(subscription,'text',this.textBuffer.join(''))
+					this.send(id, _TEXT,this.textBuffer.join(''))
 					this.textBuffer = null
 				}
 				this.escapeCommandStart = i;
@@ -401,20 +502,19 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 					else {
 						this.bufferEscapeCommand = 2;
 						if (buffer[i]>=DIGIT_ZERO && buffer[i]<=TILDE) {
-							this.executeESC(subscription,null,buffer[i]);
+							this.executeESC(id, null,buffer[i]);
 							this.bufferEscapeCommand = 0;
 						}
 					}
 				} else if(this.bufferEscapeCommand == 2) {
 					if (buffer[i]>=DIGIT_ZERO && buffer[i]<=TILDE) {
 						if (i-this.escapeCommandStart+1 == 3)
-							this.executeESC(subscription,buffer[i-1],buffer[i])
+							this.executeESC(id, buffer[i-1],buffer[i])
 						this.bufferEscapeCommand = 0;
 					}
 				} else if(this.bufferEscapeCommand == 3) {
 					if (buffer[i]>=COMMERCIAL_AT && buffer[i]<=TILDE) {
-						console.log("CSI Command",this.escapeCommandStart+2, i)
-						this.executeCSI(subscription,buffer[i],buffer.toString('ascii',start=this.escapeCommandStart+2,end=i));
+						this.executeCSI(id, buffer[i],buffer.toString('ascii',start=this.escapeCommandStart+2,end=i));
 						this.bufferEscapeCommand = 0;
 					}
 				} else if(buffer[i] >= SPACE) {
@@ -423,28 +523,28 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 					this.textBuffer[i] = String.fromCharCode(buffer[i])
 				} else {
 					if (this.textBuffer != null) {
-						this.send(subscription,'text',this.textBuffer.join(''))
+						this.send(id, _TEXT,this.textBuffer.join(''))
 						this.textBuffer = null
 					}
 					switch(buffer[i]) {
 						case BACKSPACE:
-							this.send(subscription,'cursorBackward',1)
+							this.send(id, _CURSOR_BACKWARD,1)
 							break;
 	
 						case VERTICAL_TABULATION:
 						case FORM_FEED:
 						case LINE_FEED:
-							this.send(subscription,'cursorDown',1)
+							this.send(id, _CURSOR_DOWN,1)
 							/*if (viewer.control.modes['newline'])
-								this.send('carriageReturn',null)*/
+								this.send(id, 'carriageReturn',null)*/
 							break;
 	
 						case CARRIAGE_RETURN:
-							this.send(subscription,'carriageReturn',null)
+							this.send(id, _CARRIAGE_RETURN,null)
 							break;
 	
 						case SHIFT_OUT:
-							viewer.control.modes['charset'] = 1
+							//viewer.control.modes['charset'] = 1
 							break;
 	
 						case SHIFT_IN:
@@ -471,9 +571,10 @@ TTYOpenAssistant.prototype.parse = function (subscription, buffer) {
 			}
 		}
 		if (this.textBuffer != null) {
-			this.send(subscription,'text',this.textBuffer.join(''))
+			this.send(id, _TEXT,this.textBuffer.join(''))
 			this.textBuffer = null
 		}
+		this.send(id, _SHOW_CURSOR, null)
 	} catch(e) {
 		console.log('parse',e)
 	}
@@ -494,17 +595,17 @@ TTYOpenAssistant.prototype.run = function(future, subscription) {
 	process.chdir('/')
 	var id = this.uniqid();
 	console.log('New Session ID', id)
-	ttys[id] = TTYOpenAssistant.prototype.opencmd("/bin/login",["-f","root"]);
+	ttys[id] = [
+		TTYOpenAssistant.prototype.opencmd("/bin/login",["-f","root"]),
+		subscription
+	];
 	future.result = { tty_id: id, pid:ttys[id].pid };
 	
-	var that = this;
-	ttys[id][1].on('data', function(data) {
-		that.parse(subscription,data);
-	});
+	ttys[id][0][1].on('data', this.parse.bind(this, id));
 	
 };
 
-TTYOpenAssistant.prototype.opencmd=function(cmd,args,callback) {
+TTYOpenAssistant.prototype.opencmd = function(cmd,args,callback) {
 
 	var fileds = binding.openpty();
 	var streams = [];

@@ -4,8 +4,15 @@
 
 TERM.Cursor = function (){
 	
+	this.defaultForegroundColor = WHITE_NORMAL;
+	this.defaultBackgroundColor = BLACK_NORMAL;
 	this.foregroundColor = WHITE_NORMAL;
 	this.backgroundColor = BLACK_NORMAL;
+	this.bold = false;
+	this.blink = false;
+	this.underline = false;
+	this.reverse = false;
+	
 	this.position = new jsTerm.Point();
 	this.maxColumnWidth = 127;
 	this.maxLineHeight = 25;
