@@ -1,0 +1,11 @@
+[
+	{ "library": { 
+		"name": "foundations",
+		"version": "1.0" }
+	},
+	{ "source": "prologue.js" },
+	{ "source": "TTYService.js" },
+	{ "source":	"KillAssistant.js" },
+	{ "source":	"TTYOpenAssistant.js" },
+	{ "source":	"TTYRunAssistant.js" }
+]

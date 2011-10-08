@@ -1,0 +1,29 @@
+{
+	"id": "us.ryanhope.wterm.tty",
+	"description": "TTY Service",
+	"services": [
+		{
+			"name": "us.ryanhope.wterm.tty",
+			"description": "TTY Service",
+			"assistant": "TTYService",
+			"commands": [
+				{ 
+					"name": "open", 
+					"assistant": "TTYOpenAssistant",
+					"subscribe": true,
+					"public": true
+				},
+				{ 
+					"name": "run", 
+					"assistant": "TTYRunAssistant",
+					"public": true
+				},
+				{ 
+					"name": "kill", 
+					"assistant": "KillAssistant",
+					"public": true
+				}
+			]
+		}
+	]
+}
