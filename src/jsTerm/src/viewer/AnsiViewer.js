@@ -250,7 +250,7 @@ TERM.AnsiViewer = function (control){
 	this.home = function() {
 		this.cursor.x = 0;
 		if (this.control.modes['origin'])
-			this.cursor.y = (topMargin-1) * this.cursor.maxLineHeight;
+			this.cursor.y = (topMargin-1) * this.cursor.lineHeight;
 		else
 			this.cursor.y = 0
 	};
