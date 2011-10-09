@@ -443,11 +443,11 @@ TTYOpenAssistant.prototype.cursorSave = function(id, params) {
 };
 
 TTYOpenAssistant.prototype.index = function(id, params) {
-	this.send(id, _CURSOR_DOWN, 1)
+	this.send(id, _CURSOR_DOWN, [1,true])
 };
 
 TTYOpenAssistant.prototype.reverseIndex = function(id, params) {
-	this.send(id, _CURSOR_UP, 1)
+	this.send(id, _CURSOR_UP, [1,true])
 };
 
 TTYOpenAssistant.prototype.scrollScreen = function(id, params) {
@@ -498,11 +498,11 @@ TTYOpenAssistant.prototype.scrollDown = function(id, params) {
 };
 
 TTYOpenAssistant.prototype.cursorUp = function(id, params) {
-	this.send(id, _CURSOR_UP, parseInt(params[0],10) || 1)
+	this.send(id, _CURSOR_UP, [parseInt(params[0],10) || 1, false])
 };
 
 TTYOpenAssistant.prototype.cursorDown = function(id, params) {
-	this.send(id, _CURSOR_DOWN, parseInt(params[0],10) || 1)
+	this.send(id, _CURSOR_DOWN, [parseInt(params[0],10) || 1, false])
 };
 
 TTYOpenAssistant.prototype.cursorForward = function(id, params) {
@@ -695,7 +695,7 @@ TTYOpenAssistant.prototype.parse = function (id, buffer) {
 						case VERTICAL_TABULATION:
 						case FORM_FEED:
 						case LINE_FEED:
-							this.send(id, _CURSOR_DOWN, 1)
+							this.send(id, _CURSOR_DOWN, [1, true])
 							/*if (viewer.control.modes['newline'])
 								this.send(id, 'carriageReturn',null)*/
 							break;

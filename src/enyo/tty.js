@@ -236,10 +236,10 @@ enyo.kind({
 							this.viewer.reposition(inResponse.params[1]-1,inResponse.params[0]-1)
 							break;
 						case _CURSOR_UP:
-							this.viewer.moveUp(inResponse.params)
+							this.viewer.moveUp(inResponse.params[0], inResponse.params[1])
 							break;
 						case _CURSOR_DOWN:
-							this.viewer.moveDown(inResponse.params)
+							this.viewer.moveDown(inResponse.params[0], inResponse.params[1])
 							break;
 						case _CURSOR_BACKWARD:
 							this.viewer.moveBackward(inResponse.params)

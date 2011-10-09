@@ -88,7 +88,7 @@ TERM.AnsiViewer = function (control){
 	
 	this.drawCharacter = function(character, moreText) {
 		if (this.needsWrap) {
-			this.moveDown(1)
+			this.moveDown(1, true)
 			this.carriageReturn()
 			this.needsWrap = false
 		}
@@ -162,14 +162,14 @@ TERM.AnsiViewer = function (control){
 		this.cursor.moveForward(val);
 	};
  
-	this.moveDown = function(val) {
-		if (this.cursor.y >= this.cursor.lineHeight*(botMargin-1))
+	this.moveDown = function(val, scroll) {
+		if (scroll && this.cursor.y >= this.cursor.lineHeight*(botMargin-1))
 			this.scrollUp(1);
 		else
 			this.cursor.moveDown(val);
 	};
 
-	this.moveUp = function(val) {
+	this.moveUp = function(val, scroll) {
 		this.cursor.moveUp(val);
 	};
 
