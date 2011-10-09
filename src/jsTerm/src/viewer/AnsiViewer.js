@@ -166,11 +166,14 @@ TERM.AnsiViewer = function (control){
 		if (scroll && this.cursor.y >= this.cursor.lineHeight*(botMargin-1))
 			this.scrollUp(1);
 		else
-			this.cursor.moveDown(val);
+			this.cursor.moveDown(val,botMargin);
 	};
 
 	this.moveUp = function(val, scroll) {
-		this.cursor.moveUp(val);
+		if (scroll && this.cursor.y <= this.cursor.lineHeight*(topMargin-1))
+			this.scrollDown(1);
+		else
+			this.cursor.moveUp(val,topMargin);
 	};
 
 	this.reposition = function(x, y) {
@@ -271,9 +274,14 @@ TERM.AnsiViewer = function (control){
 			
 	this.scrollUp = function(val) {
 		var canvasData = ctx.getImageData(0, topMargin * this.cursor.lineHeight, this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * (botMargin-topMargin));
+		this.eraseLine()
 		ctx.putImageData(canvasData, 0, this.cursor.lineHeight*(topMargin-1));
-		ctx.fillStyle = this.cursor.backgroundColor;
-		ctx.fillRect(0, this.cursor.lineHeight * (botMargin-1), this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * botMargin);
+	};
+	
+	this.scrollDown = function(val) {
+		var canvasData = ctx.getImageData(0, (topMargin-1) * this.cursor.lineHeight, this.cursor.maxColumnWidth*this.cursor.columnWidth, this.cursor.lineHeight * (botMargin-topMargin));
+		this.eraseLine()
+		ctx.putImageData(canvasData, 0, this.cursor.lineHeight*(topMargin));
 	};
 
 	this.setCursorEnabled = function(state) {

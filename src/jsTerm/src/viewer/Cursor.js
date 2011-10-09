@@ -66,16 +66,16 @@ TERM.Cursor = function (){
 			this.position.x = 0
 	};
 
-	this.moveDown = function (lines) {
+	this.moveDown = function (lines, botMargin) {
 		this.position.y += lines * this.lineHeight;
-		if (this.position.y > (this.maxLineHeight-1) * this.lineHeight)
-			this.position.y = (this.maxLineHeight-1) * this.lineHeight
+		if (this.position.y > (botMargin-1) * this.lineHeight)
+			this.position.y = (botMargin-1) * this.lineHeight
 	};
 
-	this.moveUp = function (lines) {
+	this.moveUp = function (lines, topMargin) {
 		this.position.y -= lines * this.lineHeight;
-		if (this.position.y < 0)
-			this.position.y = 0
+		if (this.position.y < (topMargin-1) * this.lineHeight)
+			this.position.y = (topMargin-1) * this.lineHeight
 	};
 
 	this.carriageReturn = function () {
