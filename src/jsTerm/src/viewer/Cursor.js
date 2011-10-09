@@ -68,20 +68,14 @@ TERM.Cursor = function (){
 
 	this.moveDown = function (lines) {
 		this.position.y += lines * this.lineHeight;
-		/*if (this.position.y > (this.maxLineHeight-1) * this.lineHeight) {
+		if (this.position.y > (this.maxLineHeight-1) * this.lineHeight)
 			this.position.y = (this.maxLineHeight-1) * this.lineHeight
-			return true
-		}
-		return false*/
 	};
 
 	this.moveUp = function (lines) {
 		this.position.y -= lines * this.lineHeight;
-		/*if (this.position.y < 0) {
+		if (this.position.y < 0)
 			this.position.y = 0
-			return true
-		}
-		return false*/
 	};
 
 	this.carriageReturn = function () {

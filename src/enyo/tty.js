@@ -136,7 +136,6 @@ enyo.kind({
 							break;
 						case _AUTO_WRAP:
 							this.modes['wrap'] = inResponse.params
-							this.warn("AUTO_WRAP", this.modes['wrap'])
 						case _SET_TAB_STOP:
 							this.viewer.tabs[this.viewer.cursor.position.x/this.viewer.cursor.columnWidth+1] = true
 							break;
@@ -243,7 +242,6 @@ enyo.kind({
 							this.viewer.moveDown(inResponse.params)
 							break;
 						case _CURSOR_BACKWARD:
-							this.warn('BACKWARD',this.viewer.cursor.x, this.viewer.cursor.x/this.viewer.cursor.columnWidth+1)
 							this.viewer.moveBackward(inResponse.params)
 							break;
 						case _CURSOR_FORWARD:

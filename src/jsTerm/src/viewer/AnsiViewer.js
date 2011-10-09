@@ -158,12 +158,15 @@ TERM.AnsiViewer = function (control){
 		this.cursor.moveBackward(val);
 	};
  
-	this.moveDown = function(val) {
-		this.cursor.moveDown(val)
-	};
-
-	this.moveForward = function(val) {
+ 	this.moveForward = function(val) {
 		this.cursor.moveForward(val);
+	};
+ 
+	this.moveDown = function(val) {
+		if (this.cursor.y >= this.cursor.lineHeight*(botMargin-1))
+			this.scrollUp(1);
+		else
+			this.cursor.moveDown(val);
 	};
 
 	this.moveUp = function(val) {
