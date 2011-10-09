@@ -137,7 +137,7 @@ enyo.kind({
 				this.tty.writeString('\x1b')
 				break
 			case 'Bksp':
-				this.tty.writeString('\x08')
+				this.tty.writeString('\x7f')
 				break
 			case 'Space':
 				this.tty.writeString(' ')

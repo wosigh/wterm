@@ -17,6 +17,7 @@ TERM.AnsiViewer = function (control){
 	var ctx = canvas.getContext("2d");
 	var _savedPosition = new jsTerm.Point();
 	this.tabs = [];
+	this.needsWrap = false;
 
 	this.cursorHide = function() {
 		this.revertArea(this.cursor.x,this.cursor.y,this.cursor.columnWidth,this.cursor.lineHeight,3/2)
@@ -29,12 +30,8 @@ TERM.AnsiViewer = function (control){
 	};
 
 	this.writeText = function (string) {
-		/*var autoWrap = (string.length>1 || this.control.modes['wrap']) ? true : false
-		if (string.length>1) {
-			enyo.log(string,string.length)
-		}*/
 		for (var i in string)
-			this.drawCharacter(string.charCodeAt(i))
+			this.drawCharacter(string.charCodeAt(i),(i<string.length-1)?true:false)
 	};
 
 	this.clearCanvas = function() {
@@ -89,19 +86,20 @@ TERM.AnsiViewer = function (control){
 		return 0;
 	};
 	
-	this.drawCharacter = function(character) {
-		if (this.cursor.x >= this.cursor.maxColumns * this.cursor.columnWidth) {
-			if (this.control.modes['wrap']) {
-				this.moveDown(1)
-				this.carriageReturn()
-			} else {
-				this.moveBackward(1)
-			}
+	this.drawCharacter = function(character, moreText) {
+		if (this.needsWrap) {
+			this.moveDown(1)
+			this.carriageReturn()
+			this.needsWrap = false
 		}
 		this.draw(character);
 		if (this.cursor.underline)
 			this.drawUnderline();
-		this.cursor.moveForward(1)
+		if (this.cursor.x + this.cursor.columnWidth >= this.cursor.maxColumns * this.cursor.columnWidth &&
+			this.control.modes['wrap'] && moreText)
+				this.needsWrap = true
+		else
+			this.cursor.moveForward(1)
 	};
 	
 	this.invertArea = function(x,y,w,h,f) {
@@ -161,7 +159,7 @@ TERM.AnsiViewer = function (control){
 	};
  
 	this.moveDown = function(val) {
-		this.cursor.moveDown(val);
+		this.cursor.moveDown(val)
 	};
 
 	this.moveForward = function(val) {
@@ -314,7 +312,7 @@ TERM.AnsiViewer = function (control){
 		this.control.modes['charsetG0'] = 'US'
 		this.control.modes['charsetG1'] = 'US'
 		this.control.modes['charset'] = 0
-		this.control.modes['wrap'] = false
+		this.control.modes['wrap'] = true
 		this.control.modes['newline'] = false
 		this.control.modes['reverse'] = false
 		this.control.modes['origin'] = 0

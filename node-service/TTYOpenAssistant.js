@@ -382,7 +382,7 @@ TTYOpenAssistant.prototype.executeCSI = function(id, cmd, paramsRaw) {
 };
 
 TTYOpenAssistant.prototype.eraseChar = function(id, params) {
-	this.send(id, _ERASE_CHAR, parseInt(params)||1)
+	this.send(id, _ERASE_CHAR, parseInt(params,10)||1)
 };
 
 TTYOpenAssistant.prototype.setTabStop = function(id, params) {
@@ -453,7 +453,7 @@ TTYOpenAssistant.prototype.reverseIndex = function(id, params) {
 TTYOpenAssistant.prototype.scrollScreen = function(id, params) {
 	console.log("SCROLL_SCREEN", params)
 	if (params.length == 2)
-		this.send(id, _SCROLL_SCREEN, [parseInt(params[0]),parseInt(params[1])])
+		this.send(id, _SCROLL_SCREEN, [parseInt(params[0],10),parseInt(params[1],10)])
 	else
 		this.send(id, _SCROLL_SCREEN, null)
 };
@@ -470,15 +470,15 @@ TTYOpenAssistant.prototype.deviceStatusReport = function(id, params) {
 };
 
 TTYOpenAssistant.prototype.cursorFromTop = function(id, params) {
-	this.send(id, _CURSOR_FROM_TOP, parseInt(params[0]))
+	this.send(id, _CURSOR_FROM_TOP, parseInt(params[0],10))
 };
 
 TTYOpenAssistant.prototype.cursorFromLeft = function(id, params) {
-	this.send(id, _CURSOR_FROM_LEFT, parseInt(params[0]))
+	this.send(id, _CURSOR_FROM_LEFT, parseInt(params[0],10))
 };
 
 TTYOpenAssistant.prototype.cursorPosition = function(id, params) {
-	this.send(id, _CURSOR_POSITION, [parseInt(params[0])||1,parseInt(params[1])||1])
+	this.send(id, _CURSOR_POSITION, [parseInt(params[0],10)||1,parseInt(params[1],10)||1])
 };
 
 TTYOpenAssistant.prototype.nextLine = function(id, params) {
@@ -490,38 +490,34 @@ TTYOpenAssistant.prototype.reset = function(id, params) {
 };
 
 TTYOpenAssistant.prototype.scrollUp = function(id, params) {
-	this.send(id, _SCROLL_UP, parseInt(params[0]) || 1)
+	this.send(id, _SCROLL_UP, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.scrollDown = function(id, params) {
-	this.send(id, _SCROLL_DOWN, parseInt(params[0]) || 1)
+	this.send(id, _SCROLL_DOWN, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.cursorUp = function(id, params) {
-	console.log('CURSOR_UP', params)
-	this.send(id, _CURSOR_UP, parseInt(params[0]) || 1)
+	this.send(id, _CURSOR_UP, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.cursorDown = function(id, params) {
-	console.log('CURSOR_DOWN', params)
-	this.send(id, _CURSOR_DOWN, parseInt(params[0]) || 1)
+	this.send(id, _CURSOR_DOWN, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.cursorForward = function(id, params) {
-	console.log('CURSOR_FORWARD', params)
-	this.send(id, _CURSOR_FORWARD, parseInt(params[0]) || 1)
+	this.send(id, _CURSOR_FORWARD, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.cursorBackward = function(id, params) {
-	console.log('CURSOR_BACKWARD', params)
-	this.send(id, _CURSOR_BACKWARD, parseInt(params[0]) || 1)
+	this.send(id, _CURSOR_BACKWARD, parseInt(params[0],10) || 1)
 };
 
 TTYOpenAssistant.prototype.setGraphicsMode = function(id, params) {
 		
 	for(var i in params){
 		
-		var param = (params[i]=='') ? 0 : parseInt(params[i]);
+		var param = (params[i]=='') ? 0 : parseInt(params[i],10);
 
 		switch( param ) {
 

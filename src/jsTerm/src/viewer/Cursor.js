@@ -56,38 +56,32 @@ TERM.Cursor = function (){
 		
 	this.moveForward = function (columns) {
 		this.position.x += columns*this.columnWidth
-		if (this.position.x > this.maxColumns * this.columnWidth) {
-			this.position.x = this.maxColumns * this.columnWidth
-			return true
-		}
-		return false
+		if (this.position.x > (this.maxColumns-1) * this.columnWidth)
+			this.position.x = (this.maxColumns-1) * this.columnWidth
 	};	
 		
 	this.moveBackward = function (columns) {
         this.position.x -= columns*this.columnWidth
-		if (this.position.x < 0) {
+		if (this.position.x < 0)
 			this.position.x = 0
-			return true
-		}
-		return false
 	};
 
 	this.moveDown = function (lines) {
 		this.position.y += lines * this.lineHeight;
-		if (this.position.y > (this.maxLineHeight-1) * this.lineHeight) {
+		/*if (this.position.y > (this.maxLineHeight-1) * this.lineHeight) {
 			this.position.y = (this.maxLineHeight-1) * this.lineHeight
 			return true
 		}
-		return false
+		return false*/
 	};
 
 	this.moveUp = function (lines) {
 		this.position.y -= lines * this.lineHeight;
-		if (this.position.y < 0) {
+		/*if (this.position.y < 0) {
 			this.position.y = 0
 			return true
 		}
-		return false
+		return false*/
 	};
 
 	this.carriageReturn = function () {
