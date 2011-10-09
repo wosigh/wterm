@@ -115,16 +115,16 @@ enyo.kind({
 				this.tty.writeString('\x09')
 				break
 			case 'Up':
-				this.tty.writeString('\033[A')
+				(this.tty.modes['appkeys']) ? this.tty.writeString('\033OA') : this.tty.writeString('\033[A')					
 				break
 			case 'Down':
-				this.tty.writeString('\033[B')
+				(this.tty.modes['appkeys']) ? this.tty.writeString('\033OB') : this.tty.writeString('\033[B')
 				break
 			case 'Left':
-				this.tty.writeString('\033[D')
+				(this.tty.modes['appkeys']) ? this.tty.writeString('\033OD') : this.tty.writeString('\033[D')
 				break
 			case 'Right':
-				this.tty.writeString('\033[C')
+				(this.tty.modes['appkeys']) ? this.tty.writeString('\033OC') : this.tty.writeString('\033[C')
 				break
 			case 'Enter':
 				if (this.tty.modes['newline']) {

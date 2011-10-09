@@ -23,31 +23,78 @@ TERM.Cursor = function (){
 	this.infiniteHeight = false;
 	this.visible = false;
 	this.enabled = true;
+	this.cursorBackup = [];
+	
+	this.reset = function() {
+		this.underline = false;
+		this.bold = false;
+		this.reverse = false;
+		this.blink = false;
+		this.visible = false;
+		this.foregroundColor = this.defaultForegroundColor
+		this.backgroundColor = this.defaultBackgroundColor
+	};
+	
+	this.save = function(g0, g1, g) {
+		this.cursorBackup = [
+			this.x,this.y,this.foregroundColor,this.backgroundColor,
+			this.bold,this.blink,this.underline,this.reverse,g0,g1,g
+		]
+	};
+	
+	this.restore = function() {
+		this.x = this.cursorBackup[0]
+		this.y = this.cursorBackup[1]
+		this.foregroundColor = this.cursorBackup[2]
+		this.backgroundColor = this.cursorBackup[3]
+		this.bold = this.cursorBackup[4]
+		this.blink = this.cursorBackup[5]
+		this.underline = this.cursorBackup[6]
+		this.reverse = this.cursorBackup[7]
+		return [this.cursorBackup[8],this.cursorBackup[9],this.cursorBackup[10]]
+	};
 		
 	this.moveForward = function (columns) {
-		if (this.position.x + (columns*this.columnWidth) <= this.maxColumns * this.columnWidth)
-			this.position.x = this.position.x + (columns*this.columnWidth);
-		else
-			this.position.x = (this.maxColumns * this.columnWidth) - this.columnWidth;
+		this.position.x += columns*this.columnWidth
+		if (this.position.x > this.maxColumns * this.columnWidth) {
+			this.position.x = this.maxColumns * this.columnWidth
+			return true
+		}
+		return false
 	};	
 		
 	this.moveBackward = function (columns) {
-        var newpos = this.position.x - (columns*this.columnWidth);
-        this.position.x = newpos >= 0 ? newpos : 0;
+        this.position.x -= columns*this.columnWidth
+		if (this.position.x < 0) {
+			this.position.x = 0
+			return true
+		}
+		return false
 	};
 
 	this.moveDown = function (lines) {
 		this.position.y += lines * this.lineHeight;
+		if (this.position.y > (this.maxLineHeight-1) * this.lineHeight) {
+			this.position.y = (this.maxLineHeight-1) * this.lineHeight
+			return true
+		}
+		return false
 	};
 
 	this.moveUp = function (lines) {
-        var newpos = this.position.y - (lines * this.lineHeight);
-        this.position.y = newpos >= 0 ? newpos : 0;
+		this.position.y -= lines * this.lineHeight;
+		if (this.position.y < 0) {
+			this.position.y = 0
+			return true
+		}
+		return false
 	};
 
 	this.carriageReturn = function () {
 		this.position.x = 0;
 	};
+	
+	this.save('US','US',0);
 	
 };
 

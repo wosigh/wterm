@@ -211,18 +211,7 @@
 	var _currentForegroundColor = _defaultForgroundColor;
 	var _currentBackgroundColor = _defaultBackgroundColor;
 	
-	var cursorBackup = [
-		0,0,_defaultForgroundColor,_defaultBackgroundColor,false,false,false,'US','US',0
-	];
-	this.cursorSave = function(params) {
-		cursorBackup = [
-			viewer.cursor.position.x, viewer.cursor.position.y,
-			_currentForegroundColor, _currentBackgroundColor, _bold, _reverse, viewer.underline,
-			viewer.control.modes['charsetG0'], viewer.control.modes['charsetG1'],// ORIGIN MODE
-			viewer.control.modes['charset']
-		]
-	};
-
+	
 
 
 

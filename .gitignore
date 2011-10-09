@@ -1,3 +1,4 @@
 *.ipk
 .DS_Store
 src/jsTerm/src/parser/EscapeSequencer.js.old
+.project

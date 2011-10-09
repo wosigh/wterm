@@ -1,27 +1,50 @@
-var _CURSOR_FROM_TOP = 0;
-var _CURSOR_FROM_LEFT = 1;
-var _TEXT = 2;
-var _CARRIAGE_RETURN = 4;
-var _CURSOR_POSITION = 5;
-var _CURSOR_UP = 6;
-var _CURSOR_DOWN = 7;
-var _CURSOR_BACKWARD = 8;
-var _CURSOR_FORWARD = 9;
-var _ERASE_START_OF_LINE = 10;
-var _ERASE_LINE = 11;
-var _ERASE_END_OF_LINE = 12;
-var _ERASE_UP = 13;
-var _ERASE_SCREEN = 14;
-var _ERASE_DOWN = 15;
-var _RESET = 16;
-var _GRAPHICS_MODE_BOLD = 17;
-var _GRAPHICS_MODE_BLINK = 18;
-var _GRAPHICS_MODE_UNDERLINE = 19;
-var _GRAPHICS_MODE_REVERSE = 20;
-var _GRAPHICS_MODE_FG = 21;
-var _GRAPHICS_MODE_BG = 22;
-var _SHOW_CURSOR = 23;
-var _HIDE_CURSOR = 24;
+const _CURSOR_FROM_TOP = 0;
+const _CURSOR_FROM_LEFT = 1;
+const _TEXT = 2;
+const _CARRIAGE_RETURN = 4;
+const _CURSOR_POSITION = 5;
+const _CURSOR_UP = 6;
+const _CURSOR_DOWN = 7;
+const _CURSOR_BACKWARD = 8;
+const _CURSOR_FORWARD = 9;
+const _ERASE_START_OF_LINE = 10;
+const _ERASE_LINE = 11;
+const _ERASE_END_OF_LINE = 12;
+const _ERASE_UP = 13;
+const _ERASE_SCREEN = 14;
+const _ERASE_DOWN = 15;
+const _RESET = 16;
+const _GRAPHICS_MODE_BOLD = 17;
+const _GRAPHICS_MODE_BLINK = 18;
+const _GRAPHICS_MODE_UNDERLINE = 19;
+const _GRAPHICS_MODE_REVERSE = 20;
+const _GRAPHICS_MODE_FG = 21;
+const _GRAPHICS_MODE_BG = 22;
+const _SHOW_CURSOR = 23;
+const _HIDE_CURSOR = 24;
+const _SCROLL_SCREEN = 25;
+const _ERASE_CHAR = 26;
+const _SCROLL_UP = 27;
+const _SCROLL_DOWN = 28;
+const _ENABLE_CURSOR = 29;
+const _DISABLE_CURSOR = 30;
+const _APP_CURSOR_KEYS = 31;
+const _DEC_CALIBRATE = 32;
+const _CURSOR_SAVE = 33;
+const _CURSOR_RESTORE = 34;
+const _BUFFER_SAVE = 35;
+const _BUFFER_RESTORE = 36;
+const _SET_G0 = 37;
+const _SET_G1 = 38;
+const _SET_CHARSET = 39;
+const _NEXT_LINE = 40;
+const _HTAB = 41;
+const _SET_TAB_STOP = 42;
+const _CLEAR_TAB_STOP = 43;
+const _AUTO_WRAP = 44;
+const _SET_COLS = 45;
+const _SET_ORIGIN = 46;
+const _CURSOR_REPORT = 47;
 
 enyo.kind({
 	
@@ -49,6 +72,7 @@ enyo.kind({
 			charsetG1: 'US',
 			origin: 0,
 			insert: false,
+			appkeys: false,
 		}
 	},
 	
@@ -83,15 +107,110 @@ enyo.kind({
 	
 	fmReady: function() {
 		this.viewer = new TERM.AnsiViewer(this);
-    	this.$.ttyopen.call()
+    	this.$.ttyopen.call({rows:25, cols: 127})
 	},
 
 	ttyOpenResponse: function(inSender, inResponse, inRequest) {
 		if (inResponse.returnValue === true) {
 			if (inResponse.tty_id) {
 				this.tty_id = inResponse.tty_id
+				this.viewer.resize(25,127)
+				this.viewer.clearCanvas()
 			} else {
 				switch (inResponse.type) {
+					case _CURSOR_REPORT:
+						var col = "" + this.viewer.cursor.x / this.viewer.cursor.columnWidth + 1;
+						var row = "" + this.viewer.cursor.y / this.viewer.cursor.lineHeight + 1;
+						this.writeString('\033['+row+';'+col+'R')
+						break;
+					case _SET_ORIGIN:
+						this.modes['origin'] = inResponse.params
+						break;
+					case _SET_COLS:
+						this.viewer.resize(25,inResponse.params)
+						break;
+					case _AUTO_WRAP:
+						this.modes['wrap'] = inResponse.params
+						this.warn("AUTO_WRAP", this.modes['wrap'])
+					case _SET_TAB_STOP:
+						this.viewer.tabs[this.viewer.cursor.position.x/this.viewer.cursor.columnWidth+1] = true
+						break;
+					case _CLEAR_TAB_STOP:
+						var s = parseInt(inResponse.params[0])
+						if (!s)
+							delete this.viewer.tabs[this.viewer.cursor.position.x/this.viewer.cursor.columnWidth+1]
+						else if (s==3)
+							this.viewer.tabs = []
+						break;
+					case _HTAB:
+						var newX = -1
+						for (var k in this.viewer.tabs) {
+							if (k>this.viewer.cursor.x/this.viewer.cursor.columnWidth) {
+								newX = (k-1)*this.viewer.cursor.columnWidth
+								break;
+							}
+						}
+						if (newX == -1)
+							newX = (this.viewer.cursor.maxColumnWidth-1)*this.viewer.cursor.columnWidth
+						this.viewer.cursor.x = newX
+						break;
+					case _NEXT_LINE:
+						this.viewer.moveDown(1)
+						this.viewer.carriageReturn()
+						break;
+					case _ERASE_CHAR:
+						this.viewer.eraseChar(inResponse.params)
+						break;
+					case _DEC_CALIBRATE:
+						this.viewer.decCalibrate()
+						break;
+					case _SET_CHARSET:
+						this.modes['charset'] = inResponse.params
+						break;
+					case _SET_G0:	
+						this.modes['charsetG0'] = inResponse.params
+						break;
+					case _SET_G1:	
+						this.modes['charsetG1'] = inResponse.params
+						break;
+					case _CURSOR_SAVE:
+						this.viewer.cursor.save(this.modes['charsetG0'],this.modes['charsetG1'],this.modes['charset'])
+						break;
+					case _CURSOR_RESTORE:
+						var charset = this.viewer.cursor.restore()
+						this.modes['charsetG0'] = charset[0]
+						this.modes['charsetG1'] = charset[1]
+						this.modes['charset'] = charset[2]
+						break;
+					case _BUFFER_SAVE:
+						this.viewer.bufferSave(inResponse.params)
+						break;
+					case _BUFFER_RESTORE:
+						this.viewer.bufferRestore(inResponse.params)
+						break;
+					case _APP_CURSOR_KEYS:
+						this.modes['appkeys'] = inResponse.params
+						break;
+					case _SCROLL_UP:
+						this.viewer.scrollUp(inResponse.params) // NEEDS WORK
+						break;
+					case _SCROLL_DOWN:
+						this.viewer.scrollDown(inResponse.params) // NEEDS WORK
+						break;
+					case _SCROLL_SCREEN:
+						if (inResponse.params)
+							this.viewer.scrollScreen(inResponse.params[0],inResponse.params[1])
+						else
+							this.viewer.scrollScreen(1,this.viewer.cursor.maxLineHeight)
+						break;
+					case _ENABLE_CURSOR:
+						this.viewer.cursor.enabled = true
+						break;
+					case _DISABLE_CURSOR:
+						if (this.viewer.cursor.visible)
+							this.viewer.cursorHide()
+						this.viewer.cursor.enabled = false
+						break;
 					case _HIDE_CURSOR:
 						if (this.viewer.cursor.visible)
 							this.viewer.cursorHide()
@@ -101,10 +220,10 @@ enyo.kind({
 							this.viewer.cursorShow()
 						break;
 					case _CURSOR_FROM_TOP:
-						this.viewer.cursor.position.y = viewer.cursor.lineHeight*inResponse.params;
+						this.viewer.cursor.position.y = this.viewer.cursor.lineHeight*(inResponse.params-1);
 						break
 					case _CURSOR_FROM_LEFT:
-						this.viewer.cursor.position.x = viewer.cursor.lineHeight*inResponse.params;
+						this.viewer.cursor.position.x = this.viewer.cursor.lineHeight*(inResponse.params-1);
 						break;
 					case _TEXT:
 						this.viewer.writeText(inResponse.params)
@@ -164,6 +283,9 @@ enyo.kind({
 						break;
 					case _GRAPHICS_MODE_REVERSE:
 						this.viewer.cursor.reverse = inResponse.params
+						var tmp = this.viewer.cursor.foregroundColor
+						this.viewer.cursor.foregroundColor = this.viewer.cursor.backgroundColor
+						this.viewer.cursor.backgroundColor = tmp
 						break;
 					case _GRAPHICS_MODE_UNDERLINE:
 						this.viewer.cursor.underline = inResponse.params
